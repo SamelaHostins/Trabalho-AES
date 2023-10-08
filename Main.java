@@ -15,9 +15,8 @@ public class Main {
         System.out.println("");
 
         // Precisa validar do destino
-        System.out.println("Informe o nome do arquivo de destino:");
-        String outputFile = scanner.nextLine();
-        System.out.println("Nome do arquivo de destino: " + outputFile);
+        String arquivoDeSaida = validarEntradas.obterNomeDoArquivoValido(scanner);
+        System.out.println("Nome do arquivo de destino: " + arquivoDeSaida);
         System.out.println("");
 
         String chave = validarEntradas.getChaveValida(scanner);

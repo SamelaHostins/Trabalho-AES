@@ -26,6 +26,21 @@ public class ValidarEntradas {
         }
     }
 
+    public String obterNomeDoArquivoValido(Scanner scanner) {
+        String arquivo;
+
+        while (true) {
+            System.out.println("Informe o nome do arquivo de destino a ser gerado: ");
+            arquivo = scanner.nextLine();
+
+            if (arquivo != null && !arquivo.trim().isEmpty()) {
+                return arquivo;
+            } else {
+                System.out.println("Nome do arquivo de destino inválido. Tente novamente.");
+            }
+        }
+    }
+
     // Valida se a chave foi escrita corretamente pelo usuário
     public String validarChave(String chave) {
         if (!chave.matches("^\\d{1,3}(,\\d{1,3}){15}$")) {
