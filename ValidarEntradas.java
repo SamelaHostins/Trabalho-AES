@@ -71,7 +71,7 @@ public class ValidarEntradas {
             if (erro == null) {
                 chaveValida = true;
             } else {
-                System.out.println("Erro: " + erro);
+                System.out.println(erro);
             }
         }
 
