@@ -1,0 +1,32 @@
+1- Validar Entradas do usuário para fazer testes e não correr o risco de errar
+
+2- Configuração Inicial:
+- Defina a chave de criptografia de 128 bits (16 bytes) que será usada no AES.
+- Prepare um arquivo de entrada que você deseja criptografar.
+- Escolha o modo de operação ECB.
+
+3- Leitura do Arquivo de Entrada:
+Leia o arquivo de entrada em blocos de 128 bits (16 bytes). Certifique-se de 
+aplicar o preenchimento PKCS#7, se necessário, para preencher o último bloco se 
+ele não tiver 16 bytes completos.
+Expansão da Chave:
+
+4- Expansão da Chave:
+-Expanda a chave de 128 bits para gerar as subchaves para cada rodada do AES. 
+Lembre-se de que, no modo ECB, as subchaves não mudam durante a cifragem de 
+diferentes blocos.
+
+5- Cifragem dos Blocos:
+Para cada bloco de 128 bits:
+- Aplique a operação SubBytes ao bloco.
+- Aplique a operação ShiftRows ao bloco.
+- Aplique a operação MixColumns ao bloco.
+- Aplique a operação AddRoundKey usando a subchave da rodada.
+
+6- Gravação do Texto Cifrado:
+- Conforme você cifra cada bloco de dados, grave o texto cifrado em 
+um novo arquivo de saída. Certifique-se de manter a ordem dos blocos correta.
+
+7- Fim da Cifragem:
+Após cifrar todos os blocos de dados do arquivo de entrada, você terá o 
+arquivo criptografado em seu arquivo de saída.
