@@ -17,7 +17,8 @@
 
 3- Leitura do Arquivo de Entrada:
 - Ler o arquivo de entrada em blocos de 128 bits (16 bytes). 
-- Certificar de aplicar o preenchimento PKCS#7, 
+- Dividir em blocos de 16 bytes (128 bits)
+- Aplicar o preenchimento PKCS#7 apenas no último bloco para garantir que ele tenha o tamanho correto
 - Se necessário, preencher o último bloco se ele não tiver 16 bytes completos.
 
 4- Expansão da Chave:
