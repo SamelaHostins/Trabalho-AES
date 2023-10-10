@@ -36,8 +36,7 @@ public class Main {
         byte[] arquivoEmBytes = Files.readAllBytes(Path.of(arquivoDeEntrada));
 
         byte[][] matriz = e.divideEmBlocosDe16Bytes(arquivoEmBytes);
-        String resultado = e.lerArquivo(matriz);
-        System.out.println(resultado);
+        e.printMatrizDeBlocos(matriz);
 
     }
 
