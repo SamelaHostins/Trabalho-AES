@@ -1,3 +1,5 @@
+package models;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,49 +34,48 @@ public class FileManager {
 		}
 	}
 
-	//metodo para arquivo texto
+	// metodo para arquivo texto
 	public void leArqTexto(File myObj) throws IOException {
 		try {
 			Scanner myReader = new Scanner(myObj);
-			
+
 			while (myReader.hasNextLine()) {
 				data = data + myReader.nextLine().trim();
 			}
-			
+
 			myReader.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Ocorreu um erro.");
 			e.printStackTrace();
 		}
 	}
-	
+
 	// metodo para arquivo binario
 	public void leArqBinario(File file) {
 		try {
-            FileInputStream myReader = new FileInputStream(file);
-            int byt;
-            while ((byt = myReader.read()) != -1) {	
-            	data = data + byt; 
-            }
+			FileInputStream myReader = new FileInputStream(file);
+			int byt;
+			while ((byt = myReader.read()) != -1) {
+				data = data + byt;
+			}
 
-            myReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			myReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// verifica se o arquivo é binario ou o texto do arquivo
 	public boolean ehArqBinario(File file) throws FileNotFoundException, IOException {
 		FileInputStream in = new FileInputStream(file);
-		
 		int size = in.available();
-		
+
 		if (size > 1024) {
 			size = 1024;
 		}
-			
+
 		byte[] fileData = new byte[size];
-		
+
 		in.read(fileData);
 		in.close();
 

@@ -1,6 +1,7 @@
 package view;// Autoras: Karoline, Maria Eduarda e Sâmela
 
 import models.Criptografia;
+import models.FileManager;
 import models.ValidarEntradas;
 
 import java.io.File;
