@@ -26,7 +26,7 @@ public class Criptografia {
         int padding = this.calcularPreenchimentoDoBloco(matrizDeBlocos[ultimoBloco].length);
         // Quando o último bloco não precisa de preenchimento, ainda assim é
         // gerado um bloco adicional.
-        if (padding == 0) {
+        if (padding == 16) {
             matrizDeBlocos = this.adicionarBlocoAdicional(matrizDeBlocos, 16);
         } else {
             matrizDeBlocos[ultimoBloco] = addPKCS7Padding(matrizDeBlocos[ultimoBloco]);
@@ -40,12 +40,18 @@ public class Criptografia {
     }
 
     private byte[][] adicionarBlocoAdicional(byte[][] matrizDeBlocos, int tamanhoBloco) {
-        matrizDeBlocos = Arrays.copyOf(matrizDeBlocos, matrizDeBlocos.length + 1);
-        matrizDeBlocos[matrizDeBlocos.length - 1] = new byte[tamanhoBloco];
-        for (int i = 0; i < tamanhoBloco; i++) {
-            matrizDeBlocos[matrizDeBlocos.length - 1][i] = (byte) tamanhoBloco;
+        int novoTamanho = matrizDeBlocos.length + 1;
+        byte[][] novaMatrizDeBlocos = new byte[novoTamanho][tamanhoBloco];
+
+        for (int i = 0; i < matrizDeBlocos.length; i++) {
+            novaMatrizDeBlocos[i] = matrizDeBlocos[i];
         }
-        return matrizDeBlocos;
+        // Adiciona o bloco adicional como uma nova linha
+        novaMatrizDeBlocos[novoTamanho - 1] = new byte[tamanhoBloco];
+        for (int i = 0; i < tamanhoBloco; i++) {
+            novaMatrizDeBlocos[novoTamanho - 1][i] = (byte) tamanhoBloco;
+        }
+        return novaMatrizDeBlocos;
     }
 
     private byte[] addPKCS7Padding(byte[] bloco) {
@@ -70,6 +76,36 @@ public class Criptografia {
                 }
             }
             System.out.println();
+        }
+    }
+
+    // Isso porque o AES pede que os blocos sejam organizados em matrizes 4x4
+    public byte[][][] organizarBlocos4x4(byte[][] blocos) {
+        int numBlocos = blocos.length;
+        byte[][][] matrizes4x4 = new byte[numBlocos][4][4];
+
+        for (int i = 0; i < numBlocos; i++) {
+            for (int row = 0; row < 4; row++) {
+                for (int col = 0; col < 4; col++) {
+                    matrizes4x4[i][row][col] = blocos[i][row * 4 + col];
+                }
+            }
+        }
+
+        return matrizes4x4;
+    }
+
+    // Para ver a lista de matrizes ex: matrizes4x4[0]
+    public void imprimirMatrizes4x4(byte[][][] matrizes4x4) {
+        for (int i = 0; i < matrizes4x4.length; i++) {
+            System.out.println("");
+            System.out.println("Matriz " + i + ":");
+            for (int row = 0; row < 4; row++) {
+                for (int col = 0; col < 4; col++) {
+                    System.out.print(matrizes4x4[i][row][col] + " ");
+                }
+                System.out.println();
+            }
         }
     }
 
