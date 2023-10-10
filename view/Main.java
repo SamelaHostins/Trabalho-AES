@@ -1,4 +1,7 @@
-// Autoras: Karoline, Maria Eduarda e Sâmela
+package view;// Autoras: Karoline, Maria Eduarda e Sâmela
+
+import models.Criptografia;
+import models.ValidarEntradas;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +47,7 @@ public class Main {
         byte[] arquivoEmBytes = Files.readAllBytes(Path.of(arquivoDeEntrada));
 
         byte[][] matriz = e.divideEmBlocosDe16Bytes(arquivoEmBytes);
-        String resultado = e.lerArquivo(matriz);
-        System.out.println(resultado);
+        e.printMatrizDeBlocos(matriz);
 
     }
 
