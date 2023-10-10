@@ -1,4 +1,4 @@
-// Autoras: Karoline, Maria Eduarda e Sâmela
+package models;// Autoras: Karoline, Maria Eduarda e Sâmela
 
 import java.io.File;
 import java.util.Scanner;

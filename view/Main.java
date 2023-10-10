@@ -1,4 +1,7 @@
-// Autoras: Karoline, Maria Eduarda e Sâmela
+package view;// Autoras: Karoline, Maria Eduarda e Sâmela
+
+import models.Criptografia;
+import models.ValidarEntradas;
 
 import java.io.IOException;
 import java.nio.file.Files;

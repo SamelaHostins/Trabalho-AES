@@ -1,4 +1,4 @@
-// Autoras: Karoline, Maria Eduarda e Sâmela
+package models;// Autoras: Karoline, Maria Eduarda e Sâmela
 
 import java.util.Arrays;
 
@@ -29,10 +29,14 @@ public class Criptografia {
             matrizDeBlocos[ultimoBloco] = addPKCS7Padding(matrizDeBlocos[ultimoBloco], 16);
         }
 
+
         return matrizDeBlocos;
 
     }
 
+    /*private byte[][]  addPKCS7Padding(){
+
+    }*/
     // para ver se deu certo
     public String lerArquivo(byte[][] matriz) {
         StringBuilder result = new StringBuilder();
