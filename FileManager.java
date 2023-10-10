@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class FileManager {
 	String data = null;
 
-	public void createFile(String fileName) {
+	public void criaArq(String fileName) {
 		try {
 			File myObj = new File(fileName);
 			if (myObj.createNewFile()) {
@@ -22,7 +22,7 @@ public class FileManager {
 		}
 	}
 
-	public void writeInFile(String path, String text) {
+	public void leArq(String path, String text) {
 		try {
 			FileWriter fWriter = new FileWriter(path);
 			fWriter.write(text);
@@ -33,7 +33,7 @@ public class FileManager {
 	}
 
 	//metodo para arquivo texto
-	public void readFile(File myObj) throws IOException {
+	public void leArqTexto(File myObj) throws IOException {
 		try {
 			Scanner myReader = new Scanner(myObj);
 			
@@ -49,7 +49,7 @@ public class FileManager {
 	}
 	
 	// metodo para arquivo binario
-	public void readBinaryFile(File file) {
+	public void leArqBinario(File file) {
 		try {
             FileInputStream myReader = new FileInputStream(file);
             int byt;
@@ -64,7 +64,7 @@ public class FileManager {
 	}
 
 	// verifica se o arquivo é binario ou o texto do arquivo
-	public boolean isBinaryFile(File file) throws FileNotFoundException, IOException {
+	public boolean ehArqBinario(File file) throws FileNotFoundException, IOException {
 		FileInputStream in = new FileInputStream(file);
 		
 		int size = in.available();

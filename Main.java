@@ -31,13 +31,13 @@ public class Main {
         
         FileManager fileManager = new FileManager();
 		File file = new File(arquivoDeEntrada);
-		if (fileManager.isBinaryFile(file)) {
-			fileManager.readBinaryFile(file);
+		if (fileManager.ehArqBinario(file)) {
+			fileManager.leArqBinario(file);
 		} else {
-			fileManager.readFile(file);
+			fileManager.leArq(arquivoDeSaida, chave);
 		}
 		
-		fileManager.createFile(arquivoDeSaida);
+		fileManager.criaArq(arquivoDeSaida);
 
         // Leitura do arquivo, é para ele não jogar exceção, pois já foi verificado se
         // está certo/existe
