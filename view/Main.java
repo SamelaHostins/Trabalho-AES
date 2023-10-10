@@ -1,8 +1,10 @@
 package view;// Autoras: Karoline, Maria Eduarda e Sâmela
 
 import models.Criptografia;
+import models.FileManager;
 import models.ValidarEntradas;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,15 +23,25 @@ public class Main {
         System.out.println("");
 
         // Precisa validar do destino
-        // String arquivoDeSaida = validarEntradas.obterNomeDoArquivoValido(scanner);
-        // System.out.println("Nome do arquivo de destino: " + arquivoDeSaida);
-        // System.out.println("");
+        String arquivoDeSaida = validarEntradas.obterNomeDoArquivoValido(scanner);
+        System.out.println("Nome do arquivo de destino: " + arquivoDeSaida);
+        System.out.println("");
 
-        // // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
-        // String chave = validarEntradas.getChaveValida(scanner);
-        // System.out.println("Chave: " + chave);
-        // System.out.println("");
-        // scanner.close();
+        // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
+        String chave = validarEntradas.getChaveValida(scanner);
+        System.out.println("Chave: " + chave);
+        System.out.println("");
+        scanner.close();
+        
+        FileManager fileManager = new FileManager();
+		File file = new File(arquivoDeEntrada);
+		if (fileManager.ehArqBinario(file)) {
+			fileManager.leArqBinario(file);
+		} else {
+			fileManager.leArq(arquivoDeSaida, chave);
+		}
+		
+		fileManager.criaArq(arquivoDeSaida);
 
         // Leitura do arquivo, é para ele não jogar exceção, pois já foi verificado se
         // está certo/existe
