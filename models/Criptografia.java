@@ -10,28 +10,6 @@ public class Criptografia {
      * 3° Utiliza um for para copiar cada bloco para uma matriz,
      * sendo que cada linha representará um bloco
      */
-
-    private byte[] addPKCS7Padding_2(byte[] blocoPreencher,Integer quantidadeBytes){
-        //precisa preencher de acordo com a quantidade de bytes faltantes:
-        //por exemplo recebi um bloco de byte que tem preenchido 2 bytes e eu tenho um total de 16 bytes
-        //logo faltam 14
-        //mesmo que o ultimo bloco nao tenha bytes para ser preenchidos
-        // deverá ser criado um novo bloco de 16 bytes adicional
-        Integer quantidadeBytesPreenchidos=0;
-        for (byte b : blocoPreencher) {
-            if (b != 0) {
-                quantidadeBytesPreenchidos++;
-            }
-        }
-        if(quantidadeBytesPreenchidos < quantidadeBytes) {
-            byte[] byteArray = new byte[quantidadeBytes - quantidadeBytesPreenchidos];
-            Arrays.fill(byteArray, (byte) 0xFF);
-            return byteArray;
-        }
-        byte [] byteArrayAdicional=new byte[16];
-        Arrays.fill(byteArrayAdicional,(byte) 0xFF);
-        return byteArrayAdicional;
-    }
     public byte[][] divideEmBlocosDe16Bytes(byte[] arquivoEmBytes) {
         // math.ceil para arredondar para cima
         int qtdDeBlocos = (int) Math.ceil((double) arquivoEmBytes.length / 16);
@@ -102,14 +80,14 @@ public class Criptografia {
     }
 
     // Isso porque o AES pede que os blocos sejam organizados em matrizes 4x4
-    public byte[][][] organizarBlocos4x4(byte[][] blocos) {
-        int numBlocos = blocos.length;
-        byte[][][] matrizes4x4 = new byte[numBlocos][4][4];
+    public String[][][] organizarBlocos4x4(String[][] blocosHex) {
+        int numBlocos = blocosHex.length;
+        String[][][] matrizes4x4 = new String[numBlocos][4][4];
 
         for (int i = 0; i < numBlocos; i++) {
-            for (int col = 0; col < 4; col++) { // Percorra as colunas primeiro
-                for (int row = 0; row < 4; row++) { // Em seguida, as linhas
-                    matrizes4x4[i][row][col] = blocos[i][col * 4 + row];
+            for (int col = 0; col < 4; col++) {
+                for (int linha = 0; linha < 4; linha++) {
+                    matrizes4x4[i][linha][col] = blocosHex[i][col * 4 + linha];
                 }
             }
         }
@@ -118,7 +96,7 @@ public class Criptografia {
     }
 
     // Para ver a lista de matrizes ex: matrizes4x4[0]
-    public void imprimirMatrizes4x4(byte[][][] matrizes4x4) {
+    public void imprimirMatrizes4x4(String[][][] matrizes4x4) {
         for (int i = 0; i < matrizes4x4.length; i++) {
             System.out.println("");
             System.out.println("Matriz " + i + ":");
@@ -131,11 +109,48 @@ public class Criptografia {
         }
     }
 
+    public String[][] bytesMatrixParaHex(byte[][] matrix) {
+        int numRows = matrix.length;
+        int numCols = matrix[0].length;
+        String[][] hexMatrix = new String[numRows][numCols];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                hexMatrix[i][j] = bytesParaHex(new byte[] { matrix[i][j] });
+            }
+        }
+
+        return hexMatrix;
+    }
+
     public String bytesParaHex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
         for (byte b : bytes) {
             result.append(String.format("%02X", b));
         }
         return result.toString();
+    }
+
+    private byte[] addPKCS7Padding_2(byte[] blocoPreencher, Integer quantidadeBytes) {
+        // precisa preencher de acordo com a quantidade de bytes faltantes:
+        // por exemplo recebi um bloco de byte que tem preenchido 2 bytes e eu tenho um
+        // total de 16 bytes
+        // logo faltam 14
+        // mesmo que o ultimo bloco nao tenha bytes para ser preenchidos
+        // deverá ser criado um novo bloco de 16 bytes adicional
+        Integer quantidadeBytesPreenchidos = 0;
+        for (byte b : blocoPreencher) {
+            if (b != 0) {
+                quantidadeBytesPreenchidos++;
+            }
+        }
+        if (quantidadeBytesPreenchidos < quantidadeBytes) {
+            byte[] byteArray = new byte[quantidadeBytes - quantidadeBytesPreenchidos];
+            Arrays.fill(byteArray, (byte) 0xFF);
+            return byteArray;
+        }
+        byte[] byteArrayAdicional = new byte[16];
+        Arrays.fill(byteArrayAdicional, (byte) 0xFF);
+        return byteArrayAdicional;
     }
 }

@@ -12,7 +12,7 @@
 - DEVE ser validado se o nome do arquivo de destino não é nulo ou vazio
 - DEVE ser validado se não foi passado uma chave vazia ou nula
 - DEVE ser validado se foi passada uma chave em decimal, separando-os por vírgula
-- DEVE ser validado se foi passada uma chave de 16 bytes
+- DEVE ser validado se foi passada uma chave de 16 bytes, não pode ter a mais, nem a menos
 - DEVE ser validado se os decimais passados na chave são <= 255
 
 3- Leitura do Arquivo de Entrada:
@@ -22,24 +22,29 @@
 - Se necessário, preencher o último bloco se ele não tiver 16 bytes completos.
 
 4- Organizar para pós a aplicação do ecb com PKCS#7
-para que os blocos sejam organizados em matrizes 4x4
+- Os blocos devem ser organizados em matrizes 4x4
+- A chave deve ser organizada em uma matriz de 4x4
 
-5- Expansão da Chave:
+5- Iniciar o processo de Expansão de Chave
+Implementar o processo de expansão da chave para gerar as subchaves para cada rodada. 
+Para AES-128, você precisará de 10 subchaves + a original = 11 chaves
+- 
+
+6- Expansão da Chave:
 - Expanda a chave de 128 bits para gerar as subchaves para cada rodada do AES. 
 - No modo ECB, as subchaves não mudam durante a cifragem de diferentes blocos.
 
-6- Cifragem dos Blocos:
-Para cada bloco de 128 bits:
-- Aplicar a operação SubBytes ao bloco.
-- Aplicar a operação ShiftRows ao bloco.
-- Aplicar a operação MixColumns ao bloco.
-- Aplicar a operação AddRoundKey usando a subchave da rodada.
+7- Cifragem dos Blocos:
+Para cada bloco, realizar as etapas do AES no modo ECB:
+- Adição da chave (Key Addition) usando a subchave da rodada atual.
+- Substituição de Bytes (SubBytes).
+- Permutação de Linhas (ShiftRows).
+- Mistura de Colunas (MixColumns) (não necessário na última rodada).
 
-7- Gravação do Texto Cifrado:
-- Conforme a cifra cada bloco de dados, gravar o texto cifrado em 
-um novo arquivo de saída. 
-- Certificar de manter a ordem dos blocos correta.
+8- Gravação do Texto Cifrado:
+- Após processar cada bloco, juntar os resultados criptografados.
+- Salvar o resultado criptografado em um arquivo de destino fornecido pelo usuário.
 
-8- Fim da Cifragem:
+9- Fim da Cifragem:
 - Após cifrar todos os blocos de dados do arquivo de entrada, informar o usuário 
 - Que o arquivo está criptografado em seu arquivo de saída.
