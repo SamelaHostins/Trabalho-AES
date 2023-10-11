@@ -25,9 +25,14 @@
 Implementar o processo de expansão da chave para gerar as subchaves para cada rodada. 
 Para AES-128, você precisará de 10 subchaves + a original = 11 chaves
 Para todo o primeiro processo do primeiro bloco usará a chave orginal transformada em hex
-- Transformar a chave para hex        (Feito)
-- Organizar a chave numa matriz 4x4   (Feito)
-- Primeiro passo: 
+- Transformar a chave para hex                  (Feito)
+- Organizar a chave numa matriz 4x4             (Feito)
+- Primeiro passo: criar S-box e a RoundConstant (Feito)
+- Segundo passo: fazer cópia da última palavra da roundKey anterior
+- Terceiro passo: rotacionar os bytes desta palavra
+- Quarto passo: gerar uma nova palavra, denominada de RoundConstant
+- Quinto passo: fazer um xor de (3) com (4)
+- Sexto passo: fazer um xor da 1° palavra da roundKey anterior com o resultado de (5)
 
 5- Preparar os blocos para o processo de cifragem FEITO em Cifragem
 - Transformar os blocos de bytes para hexadecimais
