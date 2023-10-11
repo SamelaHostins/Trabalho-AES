@@ -107,9 +107,9 @@ public class Criptografia {
         byte[][][] matrizes4x4 = new byte[numBlocos][4][4];
 
         for (int i = 0; i < numBlocos; i++) {
-            for (int row = 0; row < 4; row++) {
-                for (int col = 0; col < 4; col++) {
-                    matrizes4x4[i][row][col] = blocos[i][row * 4 + col];
+            for (int col = 0; col < 4; col++) { // Percorra as colunas primeiro
+                for (int row = 0; row < 4; row++) { // Em seguida, as linhas
+                    matrizes4x4[i][row][col] = blocos[i][col * 4 + row];
                 }
             }
         }
