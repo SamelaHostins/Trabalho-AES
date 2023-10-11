@@ -34,13 +34,13 @@ Para todo o primeiro processo do primeiro bloco usará a chave orginal transform
 - Quinto passo: fazer um xor de (3) com (4)
 - Sexto passo: fazer um xor da 1° palavra da roundKey anterior com o resultado de (5)
 
-5- Preparar os blocos para o processo de cifragem FEITO em Cifragem
+5- Preparar os blocos para o processo de cifragem (FEITO)
 - Transformar os blocos de bytes para hexadecimais
 - Organizar em matrizes de 4x4
 
 6- Cifragem dos Blocos:
 Para cada bloco, realizar as etapas do AES no modo ECB:
-- Adição da chave (Key Addition) usando a subchave da rodada atual.
+- Adição da chave (Key Addition) usando a subchave da rodada atual. (não se faz para a primeira chave, só para as subs)
 - Substituição de Bytes (SubBytes).
 - Permutação de Linhas (ShiftRows).
 - Mistura de Colunas (MixColumns) (não necessário na última rodada).
