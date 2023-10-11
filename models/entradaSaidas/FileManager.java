@@ -1,4 +1,4 @@
-package models;
+package models.entradaSaidas;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+// Autoras: Karoline, Maria Eduarda e Sâmela
 public class FileManager {
 	String data = null;
 

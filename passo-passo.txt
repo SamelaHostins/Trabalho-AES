@@ -1,4 +1,4 @@
-1- Configuração Inicial:  FEITO
+1- Configuração Inicial:  FEITO no  main + validar entradas
 - EU como usuario
   DEVO informar o arquivo a ser criptografado. 
   DEVO informar o nome do arquivo de destino a ser gerado.
@@ -6,7 +6,7 @@
 - A chave de criptografia deve ter 128 bits (16 bytes).
 - Deve ser um campo texto em que possa ser fornecido os valores dos 
 
-2- Validar as entradas do usuário para fazer testes e não correr o risco de errar  FEITO
+2- Validar as entradas do usuário para fazer testes e não correr o risco de errar  FEITO EM VALIDAR ENTRADAS
 - DEVE ser validado se o caminho do arquivo é válido
 - DEVE ser validado se não foi passado um campo vazio ou nulo
 - DEVE ser validado se o nome do arquivo de destino não é nulo ou vazio
@@ -15,23 +15,23 @@
 - DEVE ser validado se foi passada uma chave de 16 bytes, não pode ter a mais, nem a menos
 - DEVE ser validado se os decimais passados na chave são <= 255
 
-3- Leitura do Arquivo de Entrada:  FEITO
+3- Leitura do Arquivo de Entrada:  FEITO O ECB COM O PKCS#7 no ECBPadding
 - Ler o arquivo de entrada em blocos de 128 bits (16 bytes). 
 - Dividir em blocos de 16 bytes (128 bits)
 - Aplicar o preenchimento PKCS#7 apenas no último bloco para garantir que ele tenha o tamanho correto
 - Se necessário, preencher o último bloco se ele não tiver 16 bytes completos.
 
-4- Organizar para pós a aplicação do ecb com PKCS#7  FEITO
-- Os blocos devem ser organizados em matrizes 4x4
-- A chave deve ser organizada em uma matriz de 4x4
-
-5- Iniciar o processo de Expansão de Chave
+4- Iniciar o processo de Expansão de Chave
 Implementar o processo de expansão da chave para gerar as subchaves para cada rodada. 
 Para AES-128, você precisará de 10 subchaves + a original = 11 chaves
-Esse passo deve levar em consideração que já foi feito a tarsnformação para hex e gerado a matriz4x4
 Para todo o primeiro processo do primeiro bloco usará a chave orginal transformada em hex
+- Transformar a chave para hex        (Feito)
+- Organizar a chave numa matriz 4x4   (Feito)
 - Primeiro passo: 
 
+5- Preparar os blocos para o processo de cifragem FEITO em Cifragem
+- Transformar os blocos de bytes para hexadecimais
+- Organizar em matrizes de 4x4
 
 6- Cifragem dos Blocos:
 Para cada bloco, realizar as etapas do AES no modo ECB:

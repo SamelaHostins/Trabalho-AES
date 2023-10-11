@@ -1,17 +1,20 @@
-package view;// Autoras: Karoline, Maria Eduarda e Sâmela
+package view;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import models.Criptografia;
-import models.ValidarEntradas;
+import models.algoritmoAES.ExpansaoDeChave;
+import models.entradaSaidas.ValidarEntradas;
+import models.operacaoECB.ECBPadding;
 
+// Autoras: Karoline, Maria Eduarda e Sâmela
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Criptografia e = new Criptografia();
+        ECBPadding e = new ECBPadding();
         ValidarEntradas validarEntradas = new ValidarEntradas();
         Scanner scanner = new Scanner(System.in);
+        ExpansaoDeChave ex = new ExpansaoDeChave();
 
         // Exemplo: C:\Users\Acer\OneDrive\Documentos\teste.txt
         // String arquivoDeEntrada = validarEntradas.obterCaminhoArquivoValido(scanner);
@@ -28,12 +31,12 @@ public class Main {
         System.out.println("Chave: " + chave);
         System.out.println("");
 
-        String chaveHexadecimal = validarEntradas.transformarChaveParaHexadecimal(chave);
+        String chaveHexadecimal = ex.transformarChaveParaHexadecimal(chave);
 
-        String[][] matrizDaChave = validarEntradas.organizarChaveEmMatriz4x4(chaveHexadecimal);
+        String[][] matrizDaChave = ex.organizarChaveEmMatriz4x4(chaveHexadecimal);
         System.out.println("Matriz da chave:");
         
-        validarEntradas.imprimirMatrizDaChave(matrizDaChave);
+        ex.imprimirMatrizDaChave(matrizDaChave);
         System.out.println("");
         scanner.close();
 
