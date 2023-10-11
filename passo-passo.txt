@@ -1,4 +1,4 @@
-1- Configuração Inicial:
+1- Configuração Inicial:  FEITO
 - EU como usuario
   DEVO informar o arquivo a ser criptografado. 
   DEVO informar o nome do arquivo de destino a ser gerado.
@@ -6,7 +6,7 @@
 - A chave de criptografia deve ter 128 bits (16 bytes).
 - Deve ser um campo texto em que possa ser fornecido os valores dos 
 
-2- Validar as entradas do usuário para fazer testes e não correr o risco de errar
+2- Validar as entradas do usuário para fazer testes e não correr o risco de errar  FEITO
 - DEVE ser validado se o caminho do arquivo é válido
 - DEVE ser validado se não foi passado um campo vazio ou nulo
 - DEVE ser validado se o nome do arquivo de destino não é nulo ou vazio
@@ -15,36 +15,35 @@
 - DEVE ser validado se foi passada uma chave de 16 bytes, não pode ter a mais, nem a menos
 - DEVE ser validado se os decimais passados na chave são <= 255
 
-3- Leitura do Arquivo de Entrada:
+3- Leitura do Arquivo de Entrada:  FEITO
 - Ler o arquivo de entrada em blocos de 128 bits (16 bytes). 
 - Dividir em blocos de 16 bytes (128 bits)
 - Aplicar o preenchimento PKCS#7 apenas no último bloco para garantir que ele tenha o tamanho correto
 - Se necessário, preencher o último bloco se ele não tiver 16 bytes completos.
 
-4- Organizar para pós a aplicação do ecb com PKCS#7
+4- Organizar para pós a aplicação do ecb com PKCS#7  FEITO
 - Os blocos devem ser organizados em matrizes 4x4
 - A chave deve ser organizada em uma matriz de 4x4
 
 5- Iniciar o processo de Expansão de Chave
 Implementar o processo de expansão da chave para gerar as subchaves para cada rodada. 
 Para AES-128, você precisará de 10 subchaves + a original = 11 chaves
-- 
+Esse passo deve levar em consideração que já foi feito a tarsnformação para hex e gerado a matriz4x4
+Para todo o primeiro processo do primeiro bloco usará a chave orginal transformada em hex
+- Primeiro passo: 
 
-6- Expansão da Chave:
-- Expanda a chave de 128 bits para gerar as subchaves para cada rodada do AES. 
-- No modo ECB, as subchaves não mudam durante a cifragem de diferentes blocos.
 
-7- Cifragem dos Blocos:
+6- Cifragem dos Blocos:
 Para cada bloco, realizar as etapas do AES no modo ECB:
 - Adição da chave (Key Addition) usando a subchave da rodada atual.
 - Substituição de Bytes (SubBytes).
 - Permutação de Linhas (ShiftRows).
 - Mistura de Colunas (MixColumns) (não necessário na última rodada).
 
-8- Gravação do Texto Cifrado:
+7- Gravação do Texto Cifrado:
 - Após processar cada bloco, juntar os resultados criptografados.
 - Salvar o resultado criptografado em um arquivo de destino fornecido pelo usuário.
 
-9- Fim da Cifragem:
+8- Fim da Cifragem:
 - Após cifrar todos os blocos de dados do arquivo de entrada, informar o usuário 
 - Que o arquivo está criptografado em seu arquivo de saída.
