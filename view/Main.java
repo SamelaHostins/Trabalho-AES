@@ -1,12 +1,12 @@
 package view;// Autoras: Karoline, Maria Eduarda e Sâmela
 
-import models.Criptografia;
-import models.ValidarEntradas;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+
+import models.Criptografia;
+import models.ValidarEntradas;
 
 public class Main {
 
@@ -25,19 +25,31 @@ public class Main {
         // System.out.println("Nome do arquivo de destino: " + arquivoDeSaida);
         // System.out.println("");
 
-        // // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
+        // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
         // String chave = validarEntradas.getChaveValida(scanner);
         // System.out.println("Chave: " + chave);
         // System.out.println("");
         // scanner.close();
+        
+        // FileManager fileManager = new FileManager();
+		// File file = new File(arquivoDeEntrada);
+		// if (fileManager.ehArqBinario(file)) {
+		// 	fileManager.leArqBinario(file);
+		// } else {
+		// 	fileManager.leArq(arquivoDeSaida, chave);
+		// }
+		
+		// fileManager.criaArq(arquivoDeSaida);
 
         // Leitura do arquivo, é para ele não jogar exceção, pois já foi verificado se
         // está certo/existe
         byte[] arquivoEmBytes = Files.readAllBytes(Path.of(arquivoDeEntrada));
 
         byte[][] matriz = e.divideEmBlocosDe16Bytes(arquivoEmBytes);
-        String resultado = e.lerArquivo(matriz);
-        System.out.println(resultado);
+        e.printMatrizDeBlocos(matriz);
+
+        byte[][][] matrizes4x4 = e.organizarBlocos4x4(matriz);
+        e.imprimirMatrizes4x4(matrizes4x4);
 
     }
 
