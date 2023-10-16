@@ -4,7 +4,7 @@
   DEVO informar o nome do arquivo de destino a ser gerado.
   DEVO fornecer a chave de criptografia
 - A chave de criptografia deve ter 128 bits (16 bytes).
-- Deve ser um campo texto em que possa ser fornecido os valores dos 
+- Deve ser um campo texto em decimal em que possa ser fornecido os valores 
 
 2- Validar as entradas do usuário para fazer testes e não correr o risco de errar  FEITO EM VALIDAR ENTRADAS
 - DEVE ser validado se o caminho do arquivo é válido

@@ -48,6 +48,7 @@ public class ValidarEntradas {
             return "A chave fornecida não está no formato correto.";
         }
 
+        // ver dps que é p validar em inteiro não em byte
         String[] bytesStr = chave.split(",");
         for (String byteStr : bytesStr) {
             int byteValue = Integer.parseInt(byteStr);

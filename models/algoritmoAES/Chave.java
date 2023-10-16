@@ -133,7 +133,7 @@ public class Chave {
 
     public static void main(String[] args) {
         Chave chave = new Chave(); // Crie uma instância da classe Chave
-        int numMatrizes = 5;
+        int numMatrizes = 11;
         int numLinhas = 4;
         int numColunas = 4;
 
