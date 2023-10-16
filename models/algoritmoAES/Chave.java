@@ -32,10 +32,10 @@ public class Chave {
                 } else {
                     // Calcule o valor com XOR da coluna anterior e a coluna equivalente da matriz
                     // anterior
-                     int valorColunaAnterior = Integer.parseInt(matrizAnterior[i][j - 1], 16);
-                     int valorColunaMatrizAnterior = Integer.parseInt(matrix[i][j - 1], 16);
-                     int valorXOR = valorColunaAnterior ^ valorColunaMatrizAnterior;
-                     matrix[i][j] = String.format("%02X", valorXOR);
+                    int valorColunaAnterior = Integer.parseInt(matrizAnterior[i][j - 1], 16);
+                    int valorColunaMatrizAnterior = Integer.parseInt(matrix[i][j - 1], 16);
+                    int valorXOR = valorColunaAnterior ^ valorColunaMatrizAnterior;
+                    matrix[i][j] = String.format("%02X", valorXOR);
                     // matrix[i][j] = "63";
                 }
 
@@ -107,14 +107,17 @@ public class Chave {
 
         for (int i = 0; i < colunaRotacionada.length; i++) {
             String elemento = colunaRotacionada[i];
-            int linha;
+            int linha = 0;
             int coluna;
 
             char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
+
             if (Character.isDigit(primeiroCaractere)) {
                 linha = Integer.parseInt(elemento.substring(0, 1));
             } else {
-                linha = elemento.charAt(0) - 'a' + 10;
+                if (primeiroCaractere >= 'a' && primeiroCaractere <= 'z') {
+                    linha = primeiroCaractere - 'a' + 10;
+                }
             }
 
             char segundoCaractere = Character.toLowerCase(elemento.charAt(1));
@@ -130,7 +133,7 @@ public class Chave {
 
     public static void main(String[] args) {
         Chave chave = new Chave(); // Crie uma instância da classe Chave
-        int numMatrizes = 3;
+        int numMatrizes = 5;
         int numLinhas = 4;
         int numColunas = 4;
 
