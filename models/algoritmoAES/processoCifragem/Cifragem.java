@@ -1,82 +1,87 @@
 package models.algoritmoAES.processoCifragem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
 
-    public String[][] bytesMatrixParaHex(byte[][] matrix) {
+    public String[][] ChaveMatrixParaHex(int[][] matrix) {
         int numRows = matrix.length;
         int numCols = matrix[0].length;
         String[][] hexMatrix = new String[numRows][numCols];
 
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                hexMatrix[i][j] = bytesParaHex(new byte[]{matrix[i][j]});
+                hexMatrix[i][j] = IntParaHex(new int[] { matrix[i][j] });
             }
         }
 
         return hexMatrix;
     }
 
-    public String bytesParaHex(byte[] bytes) {
+    public String IntParaHex(int[] elementosChave) {
         StringBuilder result = new StringBuilder();
-        for (byte b : bytes) {
-            result.append(String.format("%02X", b));
+        for (int c : elementosChave) {
+            result.append(String.format("%02X", c));
         }
         return result.toString();
     }
 
     // Isso porque o AES pede que os blocos sejam organizados em matrizes 4x4
-    public String[][][] organizarBlocos4x4(String[][] blocosHex) {
-        int numBlocos = blocosHex.length;
-        String[][][] matrizes4x4 = new String[numBlocos][4][4];
+    public List<String[][]> organizarBlocos4x4(List<String[]> blocos) {
+        List<String[][]> ListaBlocos = new ArrayList<>();
 
-        for (int i = 0; i < numBlocos; i++) {
+        for (String[] bloco : blocos) {
+            String[][] matriz = new String[4][4];
             for (int col = 0; col < 4; col++) {
                 for (int linha = 0; linha < 4; linha++) {
-                    matrizes4x4[i][linha][col] = blocosHex[i][col * 4 + linha];
+                    matriz[linha][col] = bloco[col * 4 + linha];
                 }
             }
+            ListaBlocos.add(matriz);
         }
 
-        return matrizes4x4;
+        return ListaBlocos;
     }
 
-    // Para ver a lista de matrizes ex: matrizes4x4[0]
-    public void imprimirMatrizes4x4(String[][][] matrizes4x4) {
-        for (int i = 0; i < matrizes4x4.length; i++) {
+    // Para ver a lista de matrizes ex: ListaBlocos[0]
+    public void imprimirMatrizes4x4(List<String[][]> listaMatrizes) {
+        for (int i = 0; i < listaMatrizes.size(); i++) {
             System.out.println("");
             System.out.println("Matriz " + i + ":");
-            for (int row = 0; row < 4; row++) {
+            String[][] matriz = listaMatrizes.get(i);
+            for (int linha = 0; linha < 4; linha++) {
                 for (int col = 0; col < 4; col++) {
-                    System.out.print(matrizes4x4[i][row][col] + " ");
+                    System.out.print(matriz[linha][col] + " ");
                 }
                 System.out.println();
             }
         }
     }
 
-    //3) Embaralhando matriz para o proximo passo
+    // 3) Embaralhando matriz para o proximo passo
     public byte[][] shiftRows(byte[][] resultMatriz) {
         byte[][] newMatriz = new byte[resultMatriz.length][resultMatriz.length];
         for (int li = 0; li < resultMatriz.length; li++) {
             for (int col = 0; col < resultMatriz.length; col++) {
-                // caso seja maior que zero a linha,  deve-se embaralhar os bytes
+                // caso seja maior que zero a linha, deve-se embaralhar os bytes
                 if (li > 0) {
                     // se eu estiver na primeira posicao e n estiver na ultima coluna
                     if (li == 1 && col != resultMatriz.length - 1) {
-                        //li  1
-                        //col 0
+                        // li 1
+                        // col 0
                         if (col == 0) {
-                            //o resultado da linha 1 coluna 0 tem q estar na ultima coluna da matriz
+                            // o resultado da linha 1 coluna 0 tem q estar na ultima coluna da matriz
                             newMatriz[li][resultMatriz.length - 1] = resultMatriz[li][col];
                         }
-                        //1;0
-                        //1:1
+                        // 1;0
+                        // 1:1
                         newMatriz[li][col] = resultMatriz[li][col + 1];
                     }
                     if (li == 2) {
                         if (col == 0) {
-                            //o resultado da linha 2 coluna 0 tem q estar na penultima coluna da matriz
+                            // o resultado da linha 2 coluna 0 tem q estar na penultima coluna da matriz
                             newMatriz[li][resultMatriz.length - 2] = resultMatriz[li][col];
                             newMatriz[li][col] = resultMatriz[li][col + 2];
                         }
@@ -90,7 +95,7 @@ public class Cifragem {
                     }
                     if (li == 3) {
                         if (col == 0) {
-                            //o resultado da linha 3 coluna 0 tem q estar na antepenultima coluna da matriz
+                            // o resultado da linha 3 coluna 0 tem q estar na antepenultima coluna da matriz
                             newMatriz[li][resultMatriz.length - 3] = resultMatriz[li][col];
                             newMatriz[li][col] = resultMatriz[li][col + 3];
                         }
@@ -102,7 +107,7 @@ public class Cifragem {
                         }
                     }
                 } else {
-                    //na linha 0 mantem-se os valores como sao
+                    // na linha 0 mantem-se os valores como sao
                     newMatriz[li][col] = resultMatriz[li][col];
                 }
             }
