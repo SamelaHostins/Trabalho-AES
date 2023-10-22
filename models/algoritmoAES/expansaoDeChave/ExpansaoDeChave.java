@@ -27,6 +27,7 @@ public class ExpansaoDeChave {
         for (int i = 0; i < numLinhas; i++) {
             for (int j = 0; j < numColunas; j++) {
                 if (j == 0) {
+                    // operações para criar a primeira coluna de cada matriz
                     String[] ultimaColunaMatrizAnterior = obterUltimaColuna(matrizAnterior);
                     rotacionarColunaParaEsquerda(ultimaColunaMatrizAnterior);
                     substituirElementos(ultimaColunaMatrizAnterior);
@@ -34,13 +35,11 @@ public class ExpansaoDeChave {
                     matrix[i][j] = ultimaColunaMatrizAnterior[i];
 
                 } else {
-                    // Calcule o valor com XOR da coluna anterior e a coluna equivalente da matriz
-                    // anterior
+                    // XOR da coluna anterior e a coluna equivalente da matriz anterior
                     int valorColunaAnterior = Integer.parseInt(matrizAnterior[i][j - 1], 16);
                     int valorColunaMatrizAnterior = Integer.parseInt(matrix[i][j - 1], 16);
                     int valorXOR = valorColunaAnterior ^ valorColunaMatrizAnterior;
                     matrix[i][j] = String.format("%02X", valorXOR);
-                    // matrix[i][j] = "63";
                 }
 
             }
@@ -52,6 +51,7 @@ public class ExpansaoDeChave {
         return ListaDeMatrizes.size();
     }
 
+    // 1) Fazer cópia da última palavra da roundkey anterior
     private String[] obterUltimaColuna(String[][] matriz) {
         int numLinhas = matriz.length;
         String[] ultimaColuna = new String[numLinhas];
@@ -63,7 +63,7 @@ public class ExpansaoDeChave {
         return ultimaColuna;
     }
 
-    // 2) Rotaciona os bytes da palavra (RotWord)
+    // 2) Rotacionar os bytes da palavra (RotWord)
     private void rotacionarColunaParaEsquerda(String[] coluna) {
         String primeiroElemento = coluna[0];
         int numLinhas = coluna.length;
@@ -74,7 +74,7 @@ public class ExpansaoDeChave {
         coluna[numLinhas - 1] = primeiroElemento;
     }
 
-    // 3) Substitui os bytes da palavra (SubWord)
+    // 3) Substituir os bytes da palavra (SubWord)
     private void substituirElementos(String[] colunaRotacionada) {
         String[][] matriz = {
                 { "63", "7c", "77", "7b", "f2", "6b", "6f", "c5", "30", "01", "67", "2b",
@@ -137,8 +137,8 @@ public class ExpansaoDeChave {
         }
     }
 
+    // 4) Geração da RoundConstant
     private String[] encontrarRoundConstant(int contadorMatrizes) {
-        // Matriz de round constants
         String[][] roundConstantMatriz = {
                 { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
                 { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
@@ -152,13 +152,13 @@ public class ExpansaoDeChave {
             for (int i = 0; i < roundConstantMatriz.length; i++) {
                 colunaCorrespondente[i] = roundConstantMatriz[i][contadorMatrizes];
             }
-
             return colunaCorrespondente;
         } else {
             return null;
         }
     }
 
+    // 5) Xor com a RoundConstant
     private String[] fazerXORComRoundConstant(String[] ultimaColunaMatrizAnterior, int contadorMatrizes) {
         String[] roundConstant = this.encontrarRoundConstant(contadorMatrizes);
 
@@ -172,8 +172,7 @@ public class ExpansaoDeChave {
         }
         return resultadoXOR;
     }
-    
-    
+
     public static void main(String[] args) {
         ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
         int numMatrizes = 11;
