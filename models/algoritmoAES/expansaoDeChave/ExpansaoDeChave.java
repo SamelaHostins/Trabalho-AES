@@ -182,7 +182,7 @@ public class ExpansaoDeChave {
     }
 
     public static void main(String[] args) {
-        ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
+        ExpansaoDeChave chave = new ExpansaoDeChave(); 
         int numMatrizes = 11;
         int numLinhas = 4;
         int numColunas = 4;
