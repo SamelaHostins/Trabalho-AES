@@ -1,4 +1,4 @@
-package models.algoritmoAES;
+package models.algoritmoAES.processoCifragem;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
