@@ -4,13 +4,7 @@ import java.util.Arrays;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class ECBPadding {
-
-    /*
-     * 1° Verifica quantos blocos podem ser formados
-     * 2° É criada uma matriz para armazenar os blocos (pois vamos usar no aes dps)
-     * 3° Utiliza um for para copiar cada bloco para uma matriz,
-     * sendo que cada linha representará um bloco
-     */
+    
     public byte[][] divideEmBlocosDe16Bytes(byte[] arquivoEmBytes) {
         // math.ceil para arredondar para cima
         int qtdDeBlocos = (int) Math.ceil((double) arquivoEmBytes.length / 16);
@@ -78,29 +72,5 @@ public class ECBPadding {
             }
             System.out.println();
         }
-    }
-
-
-    private byte[] addPKCS7Padding_2(byte[] blocoPreencher, Integer quantidadeBytes) {
-        // precisa preencher de acordo com a quantidade de bytes faltantes:
-        // por exemplo recebi um bloco de byte que tem preenchido 2 bytes e eu tenho um
-        // total de 16 bytes
-        // logo faltam 14
-        // mesmo que o ultimo bloco nao tenha bytes para ser preenchidos
-        // deverá ser criado um novo bloco de 16 bytes adicional
-        Integer quantidadeBytesPreenchidos = 0;
-        for (byte b : blocoPreencher) {
-            if (b != 0) {
-                quantidadeBytesPreenchidos++;
-            }
-        }
-        if (quantidadeBytesPreenchidos < quantidadeBytes) {
-            byte[] byteArray = new byte[quantidadeBytes - quantidadeBytesPreenchidos];
-            Arrays.fill(byteArray, (byte) 0xFF);
-            return byteArray;
-        }
-        byte[] byteArrayAdicional = new byte[16];
-        Arrays.fill(byteArrayAdicional, (byte) 0xFF);
-        return byteArrayAdicional;
     }
 }

@@ -11,7 +11,7 @@ public class ExpansaoDeChave {
 
         // Adicione a matriz fornecida como o primeiro elemento
         ListaDeMatrizes.add(primeiraMatriz);
-        int contadorMatriz = 1; // Inicializa o contador em 1, pois já adicionamos a primeira matriz
+        int contadorMatriz = 0;
 
         for (int i = 1; i < numMatrizes; i++) {
             ListaDeMatrizes.add(gerarMatriz(numLinhas, numColunas, ListaDeMatrizes.get(i - 1), contadorMatriz));
@@ -27,20 +27,20 @@ public class ExpansaoDeChave {
         for (int i = 0; i < numLinhas; i++) {
             for (int j = 0; j < numColunas; j++) {
                 if (j == 0) {
+                    // operações para criar a primeira coluna de cada matriz
                     String[] ultimaColunaMatrizAnterior = obterUltimaColuna(matrizAnterior);
                     rotacionarColunaParaEsquerda(ultimaColunaMatrizAnterior);
                     substituirElementos(ultimaColunaMatrizAnterior);
                     fazerXORComRoundConstant(ultimaColunaMatrizAnterior, contadorMatrizes);
+                    fazerXORPrimeiraColunaComPasso5(matrizAnterior, ultimaColunaMatrizAnterior);
                     matrix[i][j] = ultimaColunaMatrizAnterior[i];
 
                 } else {
-                    // Calcule o valor com XOR da coluna anterior e a coluna equivalente da matriz
-                    // anterior
+                    // XOR da coluna anterior e a coluna equivalente da matriz anterior
                     int valorColunaAnterior = Integer.parseInt(matrizAnterior[i][j - 1], 16);
                     int valorColunaMatrizAnterior = Integer.parseInt(matrix[i][j - 1], 16);
                     int valorXOR = valorColunaAnterior ^ valorColunaMatrizAnterior;
                     matrix[i][j] = String.format("%02X", valorXOR);
-                    // matrix[i][j] = "63";
                 }
 
             }
@@ -52,6 +52,7 @@ public class ExpansaoDeChave {
         return ListaDeMatrizes.size();
     }
 
+    // 1) Fazer cópia da última palavra da roundkey anterior
     private String[] obterUltimaColuna(String[][] matriz) {
         int numLinhas = matriz.length;
         String[] ultimaColuna = new String[numLinhas];
@@ -63,7 +64,7 @@ public class ExpansaoDeChave {
         return ultimaColuna;
     }
 
-    // 2) Rotaciona os bytes da palavra (RotWord)
+    // 2) Rotacionar os bytes da palavra (RotWord)
     private void rotacionarColunaParaEsquerda(String[] coluna) {
         String primeiroElemento = coluna[0];
         int numLinhas = coluna.length;
@@ -74,7 +75,7 @@ public class ExpansaoDeChave {
         coluna[numLinhas - 1] = primeiroElemento;
     }
 
-    // 3) Substitui os bytes da palavra (SubWord)
+    // 3) Substituir os bytes da palavra (SubWord)
     private void substituirElementos(String[] colunaRotacionada) {
         String[][] matriz = {
                 { "63", "7c", "77", "7b", "f2", "6b", "6f", "c5", "30", "01", "67", "2b",
@@ -137,8 +138,8 @@ public class ExpansaoDeChave {
         }
     }
 
+    // 4) Geração da RoundConstant
     private String[] encontrarRoundConstant(int contadorMatrizes) {
-        // Matriz de round constants
         String[][] roundConstantMatriz = {
                 { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
                 { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
@@ -146,81 +147,40 @@ public class ExpansaoDeChave {
                 { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
         };
 
-        if (contadorMatrizes >= 0 && contadorMatrizes < roundConstantMatriz[0].length) {
+        if (contadorMatrizes >= 0 && contadorMatrizes <= roundConstantMatriz[0].length) {
             String[] colunaCorrespondente = new String[roundConstantMatriz.length];
 
             for (int i = 0; i < roundConstantMatriz.length; i++) {
                 colunaCorrespondente[i] = roundConstantMatriz[i][contadorMatrizes];
             }
-
             return colunaCorrespondente;
         } else {
             return null;
         }
     }
 
-    private String[] fazerXORComRoundConstant(String[] ultimaColunaMatrizAnterior, int contadorMatrizes) {
+    // 5) Xor com a RoundConstant
+    private void fazerXORComRoundConstant(String[] ultimaColunaMatrizAnterior, int contadorMatrizes) {
         String[] roundConstant = this.encontrarRoundConstant(contadorMatrizes);
-
-        String[] resultadoXOR = new String[ultimaColunaMatrizAnterior.length];
 
         for (int i = 0; i < ultimaColunaMatrizAnterior.length; i++) {
             int valorAnterior = Integer.parseInt(ultimaColunaMatrizAnterior[i], 16);
             int valorRoundConstant = Integer.parseInt(roundConstant[i], 16);
             int valorXOR = valorAnterior ^ valorRoundConstant;
-            resultadoXOR[i] = String.format("%02X", valorXOR);
+            ultimaColunaMatrizAnterior[i] = String.format("%02X", valorXOR);
         }
-        return resultadoXOR;
     }
 
-    
-    // 4) Gerando RoundConstant - MixColumns
-    
-    private byte[][] mixColumns(byte state[][]) {
-		byte newState[][] = new byte[state.length][state[0].length];
-		for (int c = 0; c < 4; c++) {
-			// primeira linha da matriz de multiplicação
-			// 2,3,1,1
-			newState[0][c] = xor(
-					galoi(state[0][c], 0x02),
-					galoi(state[1][c], 0x03), state[2][c], state[3][c]);
-			// segunda linha da matriz de multiplicação
-			// 1,2,3,1
-			newState[1][c] = xor(state[0][c], galoi(state[1][c], 0x02),
-					galoi(state[2][c], 0x03), state[3][c]);
-			// terceira linha da matriz de multiplicação
-			// 1,1,2,3
-			newState[2][c] = xor(state[0][c], state[1][c], galoi(state[2][c], 0x02),
-					galoi(state[3][c], 0x03));
-			// quarta linha da matriz de multiplicação
-			// 3,1,1,2		
-			newState[3][c] = xor(galoi(state[0][c], 0x03), state[1][c], state[2][c],
-					galoi(state[3][c], 0x02));
-		}
-		return newState;
-	}
-    
-    // metodo xor
-    
-    private byte xor(byte b1, byte b2, byte b3, byte b4) {
-		byte bResult = 0;
-		bResult ^= b1;
-		bResult ^= b2;
-		bResult ^= b3;
-		bResult ^= b4;
-		return bResult;
-	}
-    
-    // metodo de multiplicação galoi  
-    
-    private static byte galoi(int v1, int v2) {
-    	byte bytes[] = new byte[8];
-		byte result = 0;
-		bytes[0] =(byte) v1;
-		// fazer implementação
-		return result;
-	}
-    
+    // 6) Xor da 1° palavra da roundKey anterior com a palavra obtida no passo 5
+    private void fazerXORPrimeiraColunaComPasso5(String[][] matrizAnterior, String[] ultimaColunaMatrizAnterior) {
+        for (int i = 0; i < ultimaColunaMatrizAnterior.length; i++) {
+            int valorPrimeiraPalavraRoundKeyAnterior = Integer.parseInt(matrizAnterior[i][0], 16);
+            int valorColunaPasso5 = Integer.parseInt(ultimaColunaMatrizAnterior[i], 16);
+            int valorXOR = valorPrimeiraPalavraRoundKeyAnterior ^ valorColunaPasso5;
+            ultimaColunaMatrizAnterior[i] = String.format("%02X", valorXOR);
+        }
+    }
+
     public static void main(String[] args) {
         ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
         int numMatrizes = 11;
@@ -237,18 +197,9 @@ public class ExpansaoDeChave {
 
         List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes, numLinhas, numColunas, primeiraMatriz);
 
-        // Agora você tem uma lista de matrizes, com a matriz fornecida como o primeiro
-        // elemento.
-
-        // Para imprimir as matrizes, você pode usar um loop e um método de impressão
-        // personalizado.
         for (String[][] matrix : ListaDeMatrizes) {
             printMatrix(matrix);
         }
-
-        // Obter a quantidade de matrizes geradas e imprimir
-        int quantidadeDeMatrizes = chave.getQuantidadeDeMatrizes();
-        System.out.println("Quantidade de matrizes geradas: " + quantidadeDeMatrizes);
     }
 
     private static void printMatrix(String[][] matrix) {
@@ -260,11 +211,4 @@ public class ExpansaoDeChave {
         }
         System.out.println();
     }
-
-    String[][] roundConstantMatriz = {
-            { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-    };
 }
