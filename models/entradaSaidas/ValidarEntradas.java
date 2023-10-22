@@ -47,16 +47,6 @@ public class ValidarEntradas {
         if (!chave.matches("^\\d{1,3}(,\\d{1,3}){15}$")) {
             return "A chave fornecida não está no formato correto.";
         }
-
-        // ver dps que é p validar em inteiro não em byte
-        String[] bytesStr = chave.split(",");
-        for (String byteStr : bytesStr) {
-            int byteValue = Integer.parseInt(byteStr);
-            if (byteValue < 0 || byteValue > 255) {
-                return "Cada byte da chave deve ser um número inteiro entre 0 e 255.";
-            }
-        }
-
         return null; // A chave é válida
     }
 
