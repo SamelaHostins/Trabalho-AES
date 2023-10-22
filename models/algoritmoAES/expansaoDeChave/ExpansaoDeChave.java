@@ -11,7 +11,7 @@ public class ExpansaoDeChave {
 
         // Adicione a matriz fornecida como o primeiro elemento
         ListaDeMatrizes.add(primeiraMatriz);
-        int contadorMatriz = 0; 
+        int contadorMatriz = 0;
 
         for (int i = 1; i < numMatrizes; i++) {
             ListaDeMatrizes.add(gerarMatriz(numLinhas, numColunas, ListaDeMatrizes.get(i - 1), contadorMatriz));
@@ -32,6 +32,7 @@ public class ExpansaoDeChave {
                     rotacionarColunaParaEsquerda(ultimaColunaMatrizAnterior);
                     substituirElementos(ultimaColunaMatrizAnterior);
                     fazerXORComRoundConstant(ultimaColunaMatrizAnterior, contadorMatrizes);
+                    fazerXORPrimeiraColunaComPasso5(matrizAnterior, ultimaColunaMatrizAnterior);
                     matrix[i][j] = ultimaColunaMatrizAnterior[i];
 
                 } else {
@@ -161,11 +162,21 @@ public class ExpansaoDeChave {
     // 5) Xor com a RoundConstant
     private void fazerXORComRoundConstant(String[] ultimaColunaMatrizAnterior, int contadorMatrizes) {
         String[] roundConstant = this.encontrarRoundConstant(contadorMatrizes);
-    
+
         for (int i = 0; i < ultimaColunaMatrizAnterior.length; i++) {
             int valorAnterior = Integer.parseInt(ultimaColunaMatrizAnterior[i], 16);
             int valorRoundConstant = Integer.parseInt(roundConstant[i], 16);
             int valorXOR = valorAnterior ^ valorRoundConstant;
+            ultimaColunaMatrizAnterior[i] = String.format("%02X", valorXOR);
+        }
+    }
+
+    // 6) Xor da 1° palavra da roundKey anterior com a palavra obtida no passo 5
+    private void fazerXORPrimeiraColunaComPasso5(String[][] matrizAnterior, String[] ultimaColunaMatrizAnterior) {
+        for (int i = 0; i < ultimaColunaMatrizAnterior.length; i++) {
+            int valorPrimeiraPalavraRoundKeyAnterior = Integer.parseInt(matrizAnterior[i][0], 16);
+            int valorColunaPasso5 = Integer.parseInt(ultimaColunaMatrizAnterior[i], 16);
+            int valorXOR = valorPrimeiraPalavraRoundKeyAnterior ^ valorColunaPasso5;
             ultimaColunaMatrizAnterior[i] = String.format("%02X", valorXOR);
         }
     }
