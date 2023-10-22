@@ -197,18 +197,9 @@ public class ExpansaoDeChave {
 
         List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes, numLinhas, numColunas, primeiraMatriz);
 
-        // Agora você tem uma lista de matrizes, com a matriz fornecida como o primeiro
-        // elemento.
-
-        // Para imprimir as matrizes, você pode usar um loop e um método de impressão
-        // personalizado.
         for (String[][] matrix : ListaDeMatrizes) {
             printMatrix(matrix);
         }
-
-        // Obter a quantidade de matrizes geradas e imprimir
-        int quantidadeDeMatrizes = chave.getQuantidadeDeMatrizes();
-        System.out.println("Quantidade de matrizes geradas: " + quantidadeDeMatrizes);
     }
 
     private static void printMatrix(String[][] matrix) {
@@ -220,11 +211,4 @@ public class ExpansaoDeChave {
         }
         System.out.println();
     }
-
-    String[][] roundConstantMatriz = {
-            { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
-    };
 }
