@@ -1,7 +1,7 @@
-package models.algoritmoAES;
+package models.algoritmoAES.expansaoDeChave;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
-public class ExpansaoDeChave {
+public class Chave {
 
     // Transforma a representação textual da chave em hexadecimal
     public String transformarChaveParaHexadecimal(String sequencia) {

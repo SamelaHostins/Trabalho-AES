@@ -1,9 +1,9 @@
-package models.algoritmoAES;
+package models.algoritmoAES.expansaoDeChave;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chave {
+public class ExpansaoDeChave {
     private List<String[][]> ListaDeMatrizes = new ArrayList<>();
 
     public List<String[][]> gerarMatrizes(int numMatrizes, int numLinhas, int numColunas, String[][] primeiraMatriz) {
@@ -11,15 +11,17 @@ public class Chave {
 
         // Adicione a matriz fornecida como o primeiro elemento
         ListaDeMatrizes.add(primeiraMatriz);
+        int contadorMatriz = 1; // Inicializa o contador em 1, pois já adicionamos a primeira matriz
 
         for (int i = 1; i < numMatrizes; i++) {
-            ListaDeMatrizes.add(gerarMatriz(numLinhas, numColunas, ListaDeMatrizes.get(i - 1)));
+            ListaDeMatrizes.add(gerarMatriz(numLinhas, numColunas, ListaDeMatrizes.get(i - 1), contadorMatriz));
+            contadorMatriz++;
         }
 
         return ListaDeMatrizes;
     }
 
-    private String[][] gerarMatriz(int numLinhas, int numColunas, String[][] matrizAnterior) {
+    private String[][] gerarMatriz(int numLinhas, int numColunas, String[][] matrizAnterior, int contadorMatrizes) {
         String[][] matrix = new String[numLinhas][numColunas];
 
         for (int i = 0; i < numLinhas; i++) {
@@ -28,7 +30,9 @@ public class Chave {
                     String[] ultimaColunaMatrizAnterior = obterUltimaColuna(matrizAnterior);
                     rotacionarColunaParaEsquerda(ultimaColunaMatrizAnterior);
                     substituirElementos(ultimaColunaMatrizAnterior);
+                    fazerXORComRoundConstant(ultimaColunaMatrizAnterior, contadorMatrizes);
                     matrix[i][j] = ultimaColunaMatrizAnterior[i];
+
                 } else {
                     // Calcule o valor com XOR da coluna anterior e a coluna equivalente da matriz
                     // anterior
@@ -131,8 +135,44 @@ public class Chave {
         }
     }
 
+    private String[] encontrarRoundConstant(int contadorMatrizes) {
+        // Matriz de round constants
+        String[][] roundConstantMatriz = {
+                { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
+                { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+                { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+                { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+        };
+
+        if (contadorMatrizes >= 0 && contadorMatrizes < roundConstantMatriz[0].length) {
+            String[] colunaCorrespondente = new String[roundConstantMatriz.length];
+
+            for (int i = 0; i < roundConstantMatriz.length; i++) {
+                colunaCorrespondente[i] = roundConstantMatriz[i][contadorMatrizes];
+            }
+
+            return colunaCorrespondente;
+        } else {
+            return null;
+        }
+    }
+
+    private String[] fazerXORComRoundConstant(String[] ultimaColunaMatrizAnterior, int contadorMatrizes) {
+        String[] roundConstant = this.encontrarRoundConstant(contadorMatrizes);
+
+        String[] resultadoXOR = new String[ultimaColunaMatrizAnterior.length];
+
+        for (int i = 0; i < ultimaColunaMatrizAnterior.length; i++) {
+            int valorAnterior = Integer.parseInt(ultimaColunaMatrizAnterior[i], 16);
+            int valorRoundConstant = Integer.parseInt(roundConstant[i], 16);
+            int valorXOR = valorAnterior ^ valorRoundConstant;
+            resultadoXOR[i] = String.format("%02X", valorXOR);
+        }
+        return resultadoXOR;
+    }
+
     public static void main(String[] args) {
-        Chave chave = new Chave(); // Crie uma instância da classe Chave
+        ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
         int numMatrizes = 11;
         int numLinhas = 4;
         int numColunas = 4;
@@ -170,4 +210,11 @@ public class Chave {
         }
         System.out.println();
     }
+
+    String[][] roundConstantMatriz = {
+            { "01", "02", "04", "08", "10", "20", "40", "80", "1b", "36" },
+            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+            { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" },
+    };
 }

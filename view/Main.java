@@ -3,7 +3,7 @@ package view;
 import java.io.IOException;
 import java.util.Scanner;
 
-import models.algoritmoAES.ExpansaoDeChave;
+import models.algoritmoAES.expansaoDeChave.ExpansaoDeChave;
 import models.entradaSaidas.ValidarEntradas;
 import models.operacaoECB.ECBPadding;
 
