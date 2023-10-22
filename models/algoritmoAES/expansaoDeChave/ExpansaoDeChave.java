@@ -63,6 +63,7 @@ public class ExpansaoDeChave {
         return ultimaColuna;
     }
 
+    // 2) Rotaciona os bytes da palavra (RotWord)
     private void rotacionarColunaParaEsquerda(String[] coluna) {
         String primeiroElemento = coluna[0];
         int numLinhas = coluna.length;
@@ -73,6 +74,7 @@ public class ExpansaoDeChave {
         coluna[numLinhas - 1] = primeiroElemento;
     }
 
+    // 3) Substitui os bytes da palavra (SubWord)
     private void substituirElementos(String[] colunaRotacionada) {
         String[][] matriz = {
                 { "63", "7c", "77", "7b", "f2", "6b", "6f", "c5", "30", "01", "67", "2b",
@@ -171,6 +173,54 @@ public class ExpansaoDeChave {
         return resultadoXOR;
     }
 
+    
+    // 4) Gerando RoundConstant - MixColumns
+    
+    private byte[][] mixColumns(byte state[][]) {
+		byte newState[][] = new byte[state.length][state[0].length];
+		for (int c = 0; c < 4; c++) {
+			// primeira linha da matriz de multiplicação
+			// 2,3,1,1
+			newState[0][c] = xor(
+					galoi(state[0][c], 0x02),
+					galoi(state[1][c], 0x03), state[2][c], state[3][c]);
+			// segunda linha da matriz de multiplicação
+			// 1,2,3,1
+			newState[1][c] = xor(state[0][c], galoi(state[1][c], 0x02),
+					galoi(state[2][c], 0x03), state[3][c]);
+			// terceira linha da matriz de multiplicação
+			// 1,1,2,3
+			newState[2][c] = xor(state[0][c], state[1][c], galoi(state[2][c], 0x02),
+					galoi(state[3][c], 0x03));
+			// quarta linha da matriz de multiplicação
+			// 3,1,1,2		
+			newState[3][c] = xor(galoi(state[0][c], 0x03), state[1][c], state[2][c],
+					galoi(state[3][c], 0x02));
+		}
+		return newState;
+	}
+    
+    // metodo xor
+    
+    private byte xor(byte b1, byte b2, byte b3, byte b4) {
+		byte bResult = 0;
+		bResult ^= b1;
+		bResult ^= b2;
+		bResult ^= b3;
+		bResult ^= b4;
+		return bResult;
+	}
+    
+    // metodo de multiplicação galoi  
+    
+    private static byte galoi(int v1, int v2) {
+    	byte bytes[] = new byte[8];
+		byte result = 0;
+		bytes[0] =(byte) v1;
+		// fazer implementação
+		return result;
+	}
+    
     public static void main(String[] args) {
         ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
         int numMatrizes = 11;
