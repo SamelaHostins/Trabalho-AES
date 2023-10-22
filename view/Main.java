@@ -31,14 +31,14 @@ public class Main {
         System.out.println("Chave: " + chave);
         System.out.println("");
 
-        String chaveHexadecimal = ex.transformarChaveParaHexadecimal(chave);
+        // String chaveHexadecimal = ex.transformarChaveParaHexadecimal(chave);
 
-        String[][] matrizDaChave = ex.organizarChaveEmMatriz4x4(chaveHexadecimal);
-        System.out.println("Matriz da chave:");
-        
-        ex.imprimirMatrizDaChave(matrizDaChave);
-        System.out.println("");
-        scanner.close();
+        // String[][] matrizDaChave = ex.organizarChaveEmMatriz4x4(chaveHexadecimal);
+        // System.out.println("Matriz da chave:");
+
+        // ex.imprimirMatrizDaChave(matrizDaChave);
+        // System.out.println("");
+        // scanner.close();
 
         // FileManager fileManager = new FileManager();
         // File file = new File(arquivoDeEntrada);

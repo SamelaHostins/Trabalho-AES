@@ -4,13 +4,7 @@ import java.util.Arrays;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class ECBPadding {
-
-    /*
-     * 1° Verifica quantos blocos podem ser formados
-     * 2° É criada uma matriz para armazenar os blocos (pois vamos usar no aes dps)
-     * 3° Utiliza um for para copiar cada bloco para uma matriz,
-     * sendo que cada linha representará um bloco
-     */
+    
     public byte[][] divideEmBlocosDe16Bytes(byte[] arquivoEmBytes) {
         // math.ceil para arredondar para cima
         int qtdDeBlocos = (int) Math.ceil((double) arquivoEmBytes.length / 16);
