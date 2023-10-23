@@ -248,23 +248,23 @@ public class Cifragem {
                         // primeira linha da matriz de multiplicação
                         // 2,3,1,1
                         matrizResultante[0][c] = xor(
-                                        verificacao(bloco[0][c], 02), verificacao(bloco[1][c], 03),
+                                        verificacao(bloco[0][c], 2), verificacao(bloco[1][c], 3),
                                         verificaSeEhZero(bloco[2][c]), verificaSeEhZero(bloco[3][c]));
                         // segunda linha da matriz de multiplicação
                         // 1,2,3,1
                         matrizResultante[1][c] = xor(
-                                        verificaSeEhZero(bloco[0][c]), verificacao(bloco[1][c]),
-                                        verificacao(bloco[2][c]), verificaSeEhZero(bloco[3][c]));
+                                        verificaSeEhZero(bloco[0][c]), verificacao(bloco[1][c], 2),
+                                        verificacao(bloco[2][c], 3), verificaSeEhZero(bloco[3][c]));
                         // terceira linha da matriz de multiplicação
                         // 1,1,2,3
                         matrizResultante[2][c] = xor(
                                         verificaSeEhZero(bloco[0][c]), verificaSeEhZero(bloco[1][c]),
-                                        verificacao(bloco[2][c]), verificacao(bloco[3][c]));
+                                        verificacao(bloco[2][c], 2), verificacao(bloco[3][c], 3));
                         // quarta linha da matriz de multiplicação
                         // 3,1,1,2
                         matrizResultante[3][c] = xor(
-                                        verificacao(bloco[0][c]), verificaSeEhZero(bloco[1][c]),
-                                        verificaSeEhZero(bloco[2][c]), verificacao(bloco[3][c]));
+                                        verificacao(bloco[0][c], 3), verificaSeEhZero(bloco[1][c]),
+                                        verificaSeEhZero(bloco[2][c]), verificacao(bloco[3][c], 2));
                 }
                 return matrizResultante;
 
