@@ -248,23 +248,23 @@ public class Cifragem {
                         // primeira linha da matriz de multiplicação
                         // 2,3,1,1
                         matrizResultante[0][c] = xor(
-                                        verificacao(bloco[0][c]), verificacao(bloco[1][c]),
-                                        verificacao(bloco[2][c]), verificacao(bloco[3][c]));
+                                        verificacao(bloco[0][c], 02), verificacao(bloco[1][c], 03),
+                                        verificaSeEhZero(bloco[2][c]), verificaSeEhZero(bloco[3][c]));
                         // segunda linha da matriz de multiplicação
                         // 1,2,3,1
                         matrizResultante[1][c] = xor(
-                                        verificacao(bloco[0][c]), verificacao(bloco[1][c]),
-                                        verificacao(bloco[2][c]), verificacao(bloco[3][c]));
+                                        verificaSeEhZero(bloco[0][c]), verificacao(bloco[1][c]),
+                                        verificacao(bloco[2][c]), verificaSeEhZero(bloco[3][c]));
                         // terceira linha da matriz de multiplicação
                         // 1,1,2,3
                         matrizResultante[2][c] = xor(
-                                        verificacao(bloco[0][c]), verificacao(bloco[1][c]),
+                                        verificaSeEhZero(bloco[0][c]), verificaSeEhZero(bloco[1][c]),
                                         verificacao(bloco[2][c]), verificacao(bloco[3][c]));
                         // quarta linha da matriz de multiplicação
                         // 3,1,1,2
                         matrizResultante[3][c] = xor(
-                                        verificacao(bloco[0][c]), verificacao(bloco[1][c]),
-                                        verificacao(bloco[2][c]), verificacao(bloco[3][c]));
+                                        verificacao(bloco[0][c]), verificaSeEhZero(bloco[1][c]),
+                                        verificaSeEhZero(bloco[2][c]), verificacao(bloco[3][c]));
                 }
                 return matrizResultante;
 
@@ -293,14 +293,20 @@ public class Cifragem {
                 return resultado;
         }
 
-        // metodo de multiplicação verificacao
+        private int verificaSeEhZero(int elemento) {
+                return elemento == 0 ? 0 : elemento;
+        }
 
-        private int verificacao(int elemento) {
-                byte bytes[] = new byte[8];
-                byte result = 0;
-                bytes[0] = (byte) v1;
-                // fazer implementação
-                return result;
+        private int verificacao(int elemento, int valorMultiplicacao) {
+                if (elemento == 0) {
+                        return 0;
+                } else if (elemento == 1) {
+                        return elemento;
+                } else {
+
+                }
+
+                return elemento;
         }
 
         String[][] tabelaL = {
