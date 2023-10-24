@@ -319,7 +319,7 @@ public class Cifragem {
                         soma = soma % 255;
                 }
                 String resultadoHex = Integer.toHexString(soma);
-                int elementoFinal = Integer.parseInt(this.susbtituicaoTabelaE(resultadoHex));
+                int elementoFinal = Integer.parseInt(this.susbtituicaoTabelaE(resultadoHex), 16);
                 return elementoFinal;
         }
 
