@@ -303,33 +303,46 @@ public class Cifragem {
                 } else if (elemento == 1) {
                         return elemento;
                 } else {
-
+                        return this.galoi(elemento, valorMultiplicacao);
                 }
-
-                return elemento;
         }
 
         private int galoi(int elemento, String valorMultiplicacao) {
 
+                String numeroHexadecimal = Integer.toHexString(elemento);
+                int elementoPosTabelaL = Integer.parseInt(this.susbtituicaoTabelaL(numeroHexadecimal), 16);
+                int valorPosTabelaL = Integer.parseInt(this.susbtituicaoTabelaL(valorMultiplicacao), 16);
+
+                int soma = elementoPosTabelaL + valorPosTabelaL;
+                // verificação para que se o numero for maior que 255
+                if (soma > 255) {
+                        soma = soma % 255;
+                }
+                String resultadoHex = Integer.toHexString(soma);
+                int elementoFinal = Integer.parseInt(this.susbtituicaoTabelaE(resultadoHex));
+                return elementoFinal;
+        }
+
+        private String susbtituicaoTabelaL(String elemento) {
                 String[][] tabelaL = {
                                 { "00", "00", "19", "01", "32", "02", "1a", "c6", "4b", "c7", "1b", "68",
                                                 "33", "ee", "df", "03" },
-                                { "64", "04", "e0", "34", "8d", "81", "ef", "4c", "71", "08", "c8", "f8",
+                                { "64", "04", "e0", "0e", "34", "8d", "81", "ef", "4c", "71", "08", "c8",
                                                 "f8", "69", "1c", "c1" },
                                 { "7d", "c2", "1d", "b5", "f9", "b9", "27", "6a", "4d", "e4", "a6", "72",
                                                 "9a", "c9", "09", "78" },
                                 { "65", "2f", "8a", "05", "21", "0f", "e1", "24", "12", "f0", "82", "45",
                                                 "35", "93", "da", "8e" },
                                 { "96", "8f", "db", "bd", "36", "d0", "ce", "94", "13", "5c", "d2", "f1",
-                                                "f1", "46", "83", "38" },
+                                                "40", "46", "83", "38" },
                                 { "66", "dd", "fd", "30", "bf", "06", "8b", "62", "b3", "25", "e2", "98",
                                                 "22", "88", "91", "10" },
-                                { "7e", "6c", "aa", "fb", "43", "4d", "33", "85", "45", "f9", "02", "7f",
-                                                "50", "3c", "9f", "a8" },
-                                { "2b", "79", "40", "8f", "92", "9d", "38", "f5", "bc", "b6", "da", "21",
+                                { "7e", "6e", "48", "c3", "a3", "b6", "1e", "42", "3a", "6b", "28", "54",
                                                 "fa", "85", "3d", "ba" },
-                                { "af", "58", "a8", "50", "f4", "ea", "d6", "74", "4f", "ae", "e9", "d5",
+                                { "2b", "79", "0a", "15", "9b", "9f", "5e", "ca", "4e", "d4", "ac", "e5",
                                                 "f3", "73", "a7", "57" },
+                                { "af", "58", "a8", "50", "f4", "ea", "d6", "74", "4f", "ae", "e9", "d5",
+                                                "e7", "e6", "ad", "e8" },
                                 { "2c", "d7", "75", "7a", "eb", "16", "0b", "f5", "59", "cb", "5f", "b0",
                                                 "9c", "a9", "51", "a0" },
                                 { "7f", "0c", "f6", "6f", "17", "c4", "49", "ec", "d8", "43", "1f", "2d",
@@ -346,43 +359,79 @@ public class Cifragem {
                                                 "c0", "f7", "70", "07" }
                 };
 
-                String numeroHexadecimal = Integer.toHexString(elemento);
+                int linha, coluna;
+
+                char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
+                if (Character.isDigit(primeiroCaractere)) {
+                        linha = Integer.parseInt(elemento.substring(0, 1), 16);
+                } else {
+                        linha = primeiroCaractere - 'a' + 10;
+                }
+
+                char segundoCaractere = Character.toLowerCase(elemento.charAt(1));
+                if (Character.isDigit(segundoCaractere)) {
+                        coluna = Integer.parseInt(elemento.substring(1, 2), 16);
+                } else {
+                        coluna = segundoCaractere - 'a' + 10;
+                }
+
+                return tabelaL[linha][coluna];
         }
 
-        String[][] tabelaE = {
-                        { "01", "03", "19", "01", "32", "02", "1a", "c6", "4b", "c7", "1b", "68",
-                                        "33", "ee", "df", "03" },
-                        { "5f", "e1", "38", "48", "d8", "73", "95", "a4", "f7", "02", "06", "0a",
-                                        "1e", "22", "66", "aa" },
-                        { "e5", "34", "5c", "e4", "37", "59", "eb", "26", "6a", "be", "d9", "70",
-                                        "90", "ab", "e6", "31" },
-                        { "53", "f5", "8a", "05", "21", "0f", "e1", "24", "12", "f0", "82", "45",
-                                        "d3", "6e", "b2", "cd" },
-                        { "4c", "d4", "db", "bd", "36", "d0", "ce", "94", "13", "5c", "d2", "f1",
-                                        "f1", "46", "83", "88" },
-                        { "83", "9e", "fd", "30", "bf", "06", "8b", "62", "b3", "25", "e2", "98",
-                                        "22", "88", "91", "9a" },
-                        { "b5", "c4", "57", "f9", "10", "30", "50", "f0", "0b", "1d", "27", "69",
-                                        "bb", "d6", "61", "a3" },
-                        { "fe", "19", "2b", "7d", "87", "92", "ad", "ec", "2f", "71", "93", "ae",
-                                        "e9", "20", "60", "a0" },
-                        { "fb", "16", "3a", "4e", "d2", "6d", "b7", "c2", "5d", "e7", "32", "56",
-                                        "fa", "15", "3f", "41" },
-                        { "c3", "5e", "e2", "3d", "47", "c9", "40", "c0", "5b", "ed", "2c", "74",
-                                        "9c", "bf", "da", "75" },
-                        { "9f", "ba", "d5", "64", "ac", "ef", "2a", "7e", "82", "9d", "bc", "df",
-                                        "7a", "8e", "89", "80" },
-                        { "9b", "b6", "c1", "58", "e8", "23", "65", "af", "ea", "25", "6f", "b1",
-                                        "c8", "43", "c5", "54" },
-                        { "fc", "1f", "21", "63", "a5", "f4", "07", "09", "1b", "2d", "77", "99",
-                                        "b0", "cb", "46", "ca" },
-                        { "45", "cf", "4a", "de", "79", "8b", "86", "91", "a8", "e3", "3e", "42",
-                                        "c6", "51", "f3", "0e" },
-                        { "12", "36", "5a", "ee", "29", "7b", "8d", "8c", "8f", "8a", "85", "94",
-                                        "a7", "f2", "0d", "17" },
-                        { "39", "4b", "dd", "7c", "84", "97", "a2", "fd", "1c", "24", "6c", "b4",
-                                        "c7", "52", "f6", "01" }
-        };
+        private String susbtituicaoTabelaE(String elemento) {
+                String[][] tabelaE = {
+                                { "01", "03", "19", "01", "32", "02", "1a", "c6", "4b", "c7", "1b", "68",
+                                                "33", "ee", "df", "03" },
+                                { "5f", "e1", "38", "48", "d8", "73", "95", "a4", "f7", "02", "06", "0a",
+                                                "1e", "22", "66", "aa" },
+                                { "e5", "34", "5c", "e4", "37", "59", "eb", "26", "6a", "be", "d9", "70",
+                                                "90", "ab", "e6", "31" },
+                                { "53", "f5", "8a", "05", "21", "0f", "e1", "24", "12", "f0", "82", "45",
+                                                "d3", "6e", "b2", "cd" },
+                                { "4c", "d4", "db", "bd", "36", "d0", "ce", "94", "13", "5c", "d2", "f1",
+                                                "f1", "46", "83", "88" },
+                                { "83", "9e", "fd", "30", "bf", "06", "8b", "62", "b3", "25", "e2", "98",
+                                                "22", "88", "91", "9a" },
+                                { "b5", "c4", "57", "f9", "10", "30", "50", "f0", "0b", "1d", "27", "69",
+                                                "bb", "d6", "61", "a3" },
+                                { "fe", "19", "2b", "7d", "87", "92", "ad", "ec", "2f", "71", "93", "ae",
+                                                "e9", "20", "60", "a0" },
+                                { "fb", "16", "3a", "4e", "d2", "6d", "b7", "c2", "5d", "e7", "32", "56",
+                                                "fa", "15", "3f", "41" },
+                                { "c3", "5e", "e2", "3d", "47", "c9", "40", "c0", "5b", "ed", "2c", "74",
+                                                "9c", "bf", "da", "75" },
+                                { "9f", "ba", "d5", "64", "ac", "ef", "2a", "7e", "82", "9d", "bc", "df",
+                                                "7a", "8e", "89", "80" },
+                                { "9b", "b6", "c1", "58", "e8", "23", "65", "af", "ea", "25", "6f", "b1",
+                                                "c8", "43", "c5", "54" },
+                                { "fc", "1f", "21", "63", "a5", "f4", "07", "09", "1b", "2d", "77", "99",
+                                                "b0", "cb", "46", "ca" },
+                                { "45", "cf", "4a", "de", "79", "8b", "86", "91", "a8", "e3", "3e", "42",
+                                                "c6", "51", "f3", "0e" },
+                                { "12", "36", "5a", "ee", "29", "7b", "8d", "8c", "8f", "8a", "85", "94",
+                                                "a7", "f2", "0d", "17" },
+                                { "39", "4b", "dd", "7c", "84", "97", "a2", "fd", "1c", "24", "6c", "b4",
+                                                "c7", "52", "f6", "01" }
+                };
+
+                int linha, coluna;
+
+                char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
+                if (Character.isDigit(primeiroCaractere)) {
+                        linha = Integer.parseInt(elemento.substring(0, 1), 16);
+                } else {
+                        linha = primeiroCaractere - 'a' + 10;
+                }
+
+                char segundoCaractere = Character.toLowerCase(elemento.charAt(1));
+                if (Character.isDigit(segundoCaractere)) {
+                        coluna = Integer.parseInt(elemento.substring(1, 2), 16);
+                } else {
+                        coluna = segundoCaractere - 'a' + 10;
+                }
+
+                return tabelaE[linha][coluna];
+        }
 
         private void printMatrix(String[][] matrix) {
                 for (int i = 0; i < matrix.length; i++) {
@@ -396,24 +445,27 @@ public class Cifragem {
 
         public static void main(String[] args) {
                 Cifragem chave = new Cifragem();
+                int elemento = 107;
+                String valor = "02";
+                // String[][] bloco = {
+                // { "44", "4e", "56", "4e" },
+                // { "45", "56", "49", "54" },
+                // { "53", "4f", "4d", "4f" },
+                // { "45", "4c", "45", "21" }
+                // };
 
-                String[][] bloco = {
-                                { "44", "4e", "56", "4e" },
-                                { "45", "56", "49", "54" },
-                                { "53", "4f", "4d", "4f" },
-                                { "45", "4c", "45", "21" }
-                };
+                // String[][] roundKey = {
+                // { "41", "45", "49", "4d" },
+                // { "42", "46", "4a", "4e" },
+                // { "43", "47", "4b", "4f" },
+                // { "44", "48", "4c", "50" }
+                // };
 
-                String[][] roundKey = {
-                                { "41", "45", "49", "4d" },
-                                { "42", "46", "4a", "4e" },
-                                { "43", "47", "4b", "4f" },
-                                { "44", "48", "4c", "50" }
-                };
+                // String[][] matrizResultado = chave.XorComRoundKey(roundKey, bloco);
+                // chave.substituirElementos(matrizResultado);
+                // chave.shiftRows(matrizResultado);
+                // chave.printMatrix(matrizResultado);
 
-                String[][] matrizResultado = chave.XorComRoundKey(roundKey, bloco);
-                chave.substituirElementos(matrizResultado);
-                chave.shiftRows(matrizResultado);
-                chave.printMatrix(matrizResultado);
+                System.out.println(chave.galoi(elemento, valor));
         }
 }
