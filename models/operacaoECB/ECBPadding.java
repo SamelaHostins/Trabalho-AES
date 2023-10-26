@@ -1,6 +1,14 @@
 package models.operacaoECB;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class ECBPadding {
@@ -72,5 +80,55 @@ public class ECBPadding {
             }
             System.out.println();
         }
+    }
+    
+    // Criptografa arquivo
+    public static void encriptografaArquivo(String[] args) throws Exception {
+    	String chave = "ABCDE";
+    	encryptFile("C:/Users/karoline.custodio/OneDrive - Anheuser-Busch InBev/My Documents/SegInformacao/L07 - Criptografia Blowfish.pdf", "saida.bin", chave);
+        System.out.println("Arquivo criptografado com sucesso.");	
+    }
+
+    // Decriptografa o arquivo criptografado
+    public static void decriptografaArquivo(String[] args) throws Exception {
+    	String chave = "ABCDE";
+    	decryptFile("saida.bin", "decriptografado.pdf", chave);
+        System.out.println("Arquivo decriptografado com sucesso.");
+    }
+    
+    public static void encryptFile(String inputFile, String outputFile, String chave) throws Exception {
+        byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
+        byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chave);
+
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(textoCriptografado);
+        }
+
+        System.out.println("Tamanho do arquivo criptografado em bytes: " + new File(outputFile).length()); 
+    }
+
+    public static void decryptFile(String inputFile, String outputFile, String chave) throws Exception {
+        byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
+        byte[] textoDecriptografado = decryptECB(arquivoBytes, chave);
+
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(textoDecriptografado);
+        }
+    }
+    
+    public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
+        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "Blowfish");
+        Cipher cipher = Cipher.getInstance("Blowfish/ECB/AES");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedBytes = cipher.doFinal(plaintext);
+        return encryptedBytes;
+    }
+    
+    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
+        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "Blowfish");
+        Cipher cipher = Cipher.getInstance("Blowfish/ECB/AES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decryptedBytes = cipher.doFinal(ciphertext);
+        return decryptedBytes;
     }
 }
