@@ -69,5 +69,4 @@ public class ValidarEntradas {
 
         return chave;
     }
-
 }
