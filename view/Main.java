@@ -25,7 +25,7 @@ public class Main {
         
         // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
         String chave = validarEntradas.getChaveValida(scanner);
-        System.out.println("Chave: " + chave);
+      //  System.out.println("Chave: " + chave);
         System.out.println("");
         
 
@@ -47,14 +47,14 @@ public class Main {
          FileManager fileManager = new FileManager();
          File file = new File(arquivoDeEntrada);
          if (fileManager.ehArqBinario(file)) {
-         fileManager.leArqBinario(file);
+        	 fileManager.leArqBinario(file);
          } else {
-         fileManager.leArq(arquivoDeSaida, chave);
+        	 fileManager.leArq(arquivoDeSaida, chave);
          }
 
         // fileManager.criaArq(arquivoDeSaida);
         try {
-        	 e.criptografaArquivo(new Scanner(arquivoDeEntrada), new Scanner(arquivoDeSaida), new Scanner(chave));
+        	 e.criptografaArquivo(arquivoDeEntrada,arquivoDeSaida, chave);
          } catch (Exception e1) {
         	    // Lide com a exceção aqui
         	    e1.printStackTrace(); // ou qualquer tratamento de erro específico que você desejar

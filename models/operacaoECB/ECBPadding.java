@@ -85,36 +85,32 @@ public class ECBPadding {
     }
     
     // Criptografa arquivo
-    public String criptografaArquivo(Scanner entrada, Scanner saida, Scanner chave) throws Exception {
+    public String criptografaArquivo(String entrada, String saida, String chave) throws Exception {
     	//encryptFile("C:/Users/karoline.custodio/OneDrive - Anheuser-Busch InBev/My Documents/SegInformacao/L07 - Criptografia Blowfish.pdf", "saida.bin", chave);
+    	System.out.println(entrada);	
+    	System.out.println(saida);	
+    	System.out.println(chave);	
     	String arqCriptografado = encryptFile(entrada, saida, chave);
         System.out.println("Arquivo criptografado com sucesso.");	
         return arqCriptografado;
     }
 
     // Decriptografa o arquivo criptografado
-    public static void decriptografaArquivo(String[] args) throws Exception {
-    	String chave = "ABCDE";
-    	decryptFile("saida.bin", "decriptografado.pdf", chave);
+    public static void decriptografaArquivo(String entrada, String saida, String chave) throws Exception {
+    	decryptFile(saida, "decriptografado.pdf", chave);
         System.out.println("Arquivo decriptografado com sucesso.");
     }
     
-    public static String encryptFile(Scanner inputFile, Scanner outputFile, Scanner chaveScanner) throws Exception {
-    	String chave = chaveScanner.nextLine();
-    	
-    	StringBuilder conteudo = new StringBuilder();
-    	
-    	while (inputFile.hasNextLine()) {
-            conteudo.append(inputFile.nextLine());
-        }
-    	
-        byte[] arquivoBytes = conteudo.toString().getBytes("UTF-8");
-        byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chave);
+    public static String encryptFile(String inputFile, String outputFile, String chaveScanner) throws Exception {
+    	byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
+        byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chaveScanner);
 
-        System.out.println("Tamanho do arquivo criptografado em bytes: " + textoCriptografado.length); 
-        
-        String textoCriptografadoString = new String (textoCriptografado, "UTF-8");
-        return textoCriptografadoString;
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(textoCriptografado);
+        }
+
+        System.out.println("Tamanho do arquivo criptografado em bytes: " + new File(outputFile).length());
+        return textoCriptografado.toString();
     }
 
     public static void decryptFile(String inputFile, String outputFile, String chave) throws Exception {
@@ -125,17 +121,30 @@ public class ECBPadding {
             fos.write(textoDecriptografado);
         }
     }
-    
+       
     public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "AES");
+    	String[] numeros = chave.split(",");
+        byte[] bytesChave = new byte[numeros.length];
+
+        for (int i = 0; i < numeros.length; i++) {
+            int numero = Integer.parseInt(numeros[i]);
+            bytesChave[i] = (byte) numero;
+        }
+
+        SecretKey secretKey = new SecretKeySpec(bytesChave, "AES");
+
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         byte[] encryptedBytes = cipher.doFinal(plaintext);
+
         return encryptedBytes;
     }
     
     public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "AES");
+    	byte[] chaveBytes = chave.getBytes();
+    	
+        SecretKey secretKey = new SecretKeySpec(chaveBytes, "AES");
+        
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decryptedBytes = cipher.doFinal(ciphertext);
