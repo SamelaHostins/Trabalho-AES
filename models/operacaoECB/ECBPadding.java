@@ -2,9 +2,11 @@ package models.operacaoECB;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -83,10 +85,11 @@ public class ECBPadding {
     }
     
     // Criptografa arquivo
-    public static void encriptografaArquivo(String[] args) throws Exception {
-    	String chave = "ABCDE";
-    	encryptFile("C:/Users/karoline.custodio/OneDrive - Anheuser-Busch InBev/My Documents/SegInformacao/L07 - Criptografia Blowfish.pdf", "saida.bin", chave);
+    public String criptografaArquivo(Scanner entrada, Scanner saida, Scanner chave) throws Exception {
+    	//encryptFile("C:/Users/karoline.custodio/OneDrive - Anheuser-Busch InBev/My Documents/SegInformacao/L07 - Criptografia Blowfish.pdf", "saida.bin", chave);
+    	String arqCriptografado = encryptFile(entrada, saida, chave);
         System.out.println("Arquivo criptografado com sucesso.");	
+        return arqCriptografado;
     }
 
     // Decriptografa o arquivo criptografado
@@ -96,15 +99,22 @@ public class ECBPadding {
         System.out.println("Arquivo decriptografado com sucesso.");
     }
     
-    public static void encryptFile(String inputFile, String outputFile, String chave) throws Exception {
-        byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
+    public static String encryptFile(Scanner inputFile, Scanner outputFile, Scanner chaveScanner) throws Exception {
+    	String chave = chaveScanner.nextLine();
+    	
+    	StringBuilder conteudo = new StringBuilder();
+    	
+    	while (inputFile.hasNextLine()) {
+            conteudo.append(inputFile.nextLine());
+        }
+    	
+        byte[] arquivoBytes = conteudo.toString().getBytes("UTF-8");
         byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chave);
 
-        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            fos.write(textoCriptografado);
-        }
-
-        System.out.println("Tamanho do arquivo criptografado em bytes: " + new File(outputFile).length()); 
+        System.out.println("Tamanho do arquivo criptografado em bytes: " + textoCriptografado.length); 
+        
+        String textoCriptografadoString = new String (textoCriptografado, "UTF-8");
+        return textoCriptografadoString;
     }
 
     public static void decryptFile(String inputFile, String outputFile, String chave) throws Exception {
@@ -117,16 +127,16 @@ public class ECBPadding {
     }
     
     public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "Blowfish");
-        Cipher cipher = Cipher.getInstance("Blowfish/ECB/AES");
+        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         byte[] encryptedBytes = cipher.doFinal(plaintext);
         return encryptedBytes;
     }
     
     public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "Blowfish");
-        Cipher cipher = Cipher.getInstance("Blowfish/ECB/AES");
+        SecretKey secretKey = new SecretKeySpec(chave.getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decryptedBytes = cipher.doFinal(ciphertext);
         return decryptedBytes;
