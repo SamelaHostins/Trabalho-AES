@@ -44,9 +44,9 @@ public class ValidarEntradas {
 
     // Valida se a chave foi escrita corretamente pelo usuário
     public String validarChave(String chave) {
-       // if (!chave.matches("^\\d{1,3}(,\\d{1,3}){15}$")) {
-        //    return "A chave fornecida não está no formato correto.";
-       // }
+        if (!chave.matches("^\\d{1,3}(,\\d{1,3}){15}$")) {
+            return "A chave fornecida não está no formato correto.";
+        }
         return null; // A chave é válida
     }
 

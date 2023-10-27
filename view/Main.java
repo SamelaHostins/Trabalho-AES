@@ -55,6 +55,7 @@ public class Main {
         // fileManager.criaArq(arquivoDeSaida);
         try {
         	 e.criptografaArquivo(arquivoDeEntrada,arquivoDeSaida, chave);
+        	 e.decriptografaArquivo(arquivoDeEntrada,arquivoDeSaida, chave);
          } catch (Exception e1) {
         	    // Lide com a exceção aqui
         	    e1.printStackTrace(); // ou qualquer tratamento de erro específico que você desejar

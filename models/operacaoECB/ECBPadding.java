@@ -86,10 +86,6 @@ public class ECBPadding {
     
     // Criptografa arquivo
     public String criptografaArquivo(String entrada, String saida, String chave) throws Exception {
-    	//encryptFile("C:/Users/karoline.custodio/OneDrive - Anheuser-Busch InBev/My Documents/SegInformacao/L07 - Criptografia Blowfish.pdf", "saida.bin", chave);
-    	System.out.println(entrada);	
-    	System.out.println(saida);	
-    	System.out.println(chave);	
     	String arqCriptografado = encryptFile(entrada, saida, chave);
         System.out.println("Arquivo criptografado com sucesso.");	
         return arqCriptografado;
@@ -121,7 +117,7 @@ public class ECBPadding {
             fos.write(textoDecriptografado);
         }
     }
-       
+    
     public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
     	String[] numeros = chave.split(",");
         byte[] bytesChave = new byte[numeros.length];
@@ -140,14 +136,21 @@ public class ECBPadding {
         return encryptedBytes;
     }
     
-    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
-    	byte[] chaveBytes = chave.getBytes();
-    	
-        SecretKey secretKey = new SecretKeySpec(chaveBytes, "AES");
-        
+    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {     
+        String[] numeros = chave.split(",");
+        byte[] bytesChave = new byte[numeros.length];
+
+        for (int i = 0; i < numeros.length; i++) {
+            int numero = Integer.parseInt(numeros[i]);
+            bytesChave[i] = (byte) numero;
+        }
+
+        SecretKey secretKey = new SecretKeySpec(bytesChave, "AES");
+
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedBytes = cipher.doFinal(ciphertext);
-        return decryptedBytes;
+        byte[] encryptedBytes = cipher.doFinal(ciphertext);
+
+        return encryptedBytes;
     }
 }
