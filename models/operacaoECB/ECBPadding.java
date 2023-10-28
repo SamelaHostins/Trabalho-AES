@@ -141,7 +141,7 @@ public class ECBPadding extends Cifragem {
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
             // Converter a lista de matrizes de strings para uma única string
             StringBuilder builder = new StringBuilder();
-            for (String[][] matrizToConvert : listaDeBlocos) {
+            for (String[][] matrizToConvert : cifragem) {
                 for (String[] linha : matrizToConvert) {
                     for (String elemento : linha) {
                         builder.append(elemento).append(" ");

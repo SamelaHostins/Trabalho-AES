@@ -1,11 +1,7 @@
 package models.algoritmoAES.expansaoDeChave;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -49,12 +45,12 @@ public class Main {
         } else {
             fileManager.leArq(arquivoDeSaida, chave);
         }
+        //"C:/Users/Acer/Downloads/L08 - Resumo de mensagema.pdf"
         //20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
         //C:/Users/Elvis/Documents/Trabalho-AES
         // fileManager.criaArq(arquivoDeSaida);
         try {
             e.criptografaArquivo(arquivoDeEntrada, arquivoDeSaida, listaDeRoundKey);
-            //e.decriptografaArquivo(arquivoDeEntrada, arquivoDeSaida, chave);
         } catch (Exception e1) {
             // Lide com a exceção aqui
             e1.printStackTrace(); // ou qualquer tratamento de erro específico que você desejar
