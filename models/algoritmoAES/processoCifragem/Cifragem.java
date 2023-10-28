@@ -3,12 +3,10 @@ package models.algoritmoAES.processoCifragem;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.algoritmoAES.expansaoDeChave.ExpansaoDeChave;
-
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
 
-        public String[][] ChaveMatrixParaHex(int[][] matriz) {
+        public String[][] converteMatrizParaHex(int[][] matriz) {
                 int numRows = matriz.length;
                 int numCols = matriz[0].length;
                 String[][] hexMatrix = new String[numRows][numCols];
@@ -31,7 +29,7 @@ public class Cifragem {
         }
 
         // Isso porque o AES pede que os blocos sejam organizados em matrizes 4x4
-        public List<String[][]> organizarBlocos4x4(List<String[]> blocos) {
+        public List<String[][]> organizarBlocos4x4(String[][] blocos) {
                 List<String[][]> ListaBlocos = new ArrayList<>();
 
                 for (String[] bloco : blocos) {
@@ -539,7 +537,7 @@ public class Cifragem {
         // System.out.println("");
 
         // int[][] matriz = cifragem.mixColumns(bloco);
-        // String[][] matrizHex = cifragem.ChaveMatrixParaHex(matriz);
+        // String[][] matrizHex = cifragem.ConverteMatrizParaHex(matriz);
         // chave.printMatrix(matrizHex);
 
         // System.out.println(cifragem.galoi(43, "03"));

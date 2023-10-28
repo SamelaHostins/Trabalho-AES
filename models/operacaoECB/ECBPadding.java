@@ -1,30 +1,37 @@
 package models.operacaoECB;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import models.algoritmoAES.processoCifragem.Cifragem;
+
 // Autoras: Karoline, Maria Eduarda e Sâmela
-public class ECBPadding {
-    
-    public byte[][] divideEmBlocosDe16Bytes(byte[] arquivoEmBytes) {
+public class ECBPadding extends Cifragem {
+
+    // fazer em int
+    public int[][] divideEmBlocosDe16Bytes(int[] arquivoEmInt) {
         // math.ceil para arredondar para cima
-        int qtdDeBlocos = (int) Math.ceil((double) arquivoEmBytes.length / 16);
-        byte[][] matrizDeBlocos = new byte[qtdDeBlocos][16];
+        int qtdDeBlocos = (int) Math.ceil((double) arquivoEmInt.length / 16);
+        int[][] matrizDeBlocos = new int[qtdDeBlocos][16];
 
         // divide em blocos de 16 bytes
         for (int i = 0; i < qtdDeBlocos; i++) {
             int indiceInicial = i * 16;
-            int indiceFinal = Math.min(indiceInicial + 16, arquivoEmBytes.length);
-            matrizDeBlocos[i] = Arrays.copyOfRange(arquivoEmBytes, indiceInicial, indiceFinal);
+            int indiceFinal = Math.min(indiceInicial + 16, arquivoEmInt.length);
+            matrizDeBlocos[i] = Arrays.copyOfRange(arquivoEmInt, indiceInicial, indiceFinal);
         }
 
         int ultimoBloco = qtdDeBlocos - 1;
@@ -44,27 +51,27 @@ public class ECBPadding {
         return padding;
     }
 
-    private byte[][] adicionarBlocoAdicional(byte[][] matrizDeBlocos, int tamanhoBloco) {
+    private int[][] adicionarBlocoAdicional(int[][] matrizDeBlocos, int tamanhoBloco) {
         int novoTamanho = matrizDeBlocos.length + 1;
-        byte[][] novaMatrizDeBlocos = new byte[novoTamanho][tamanhoBloco];
+        int[][] novaMatrizDeBlocos = new int[novoTamanho][tamanhoBloco];
 
         for (int i = 0; i < matrizDeBlocos.length; i++) {
             novaMatrizDeBlocos[i] = matrizDeBlocos[i];
         }
         // Adiciona o bloco adicional como uma nova linha
-        novaMatrizDeBlocos[novoTamanho - 1] = new byte[tamanhoBloco];
+        novaMatrizDeBlocos[novoTamanho - 1] = new int[tamanhoBloco];
         for (int i = 0; i < tamanhoBloco; i++) {
-            novaMatrizDeBlocos[novoTamanho - 1][i] = (byte) tamanhoBloco;
+            novaMatrizDeBlocos[novoTamanho - 1][i] = (int) tamanhoBloco;
         }
         return novaMatrizDeBlocos;
     }
 
-    private byte[] addPKCS7Padding(byte[] bloco) {
+    private int[] addPKCS7Padding(int[] bloco) {
         int padding = this.calcularPreenchimentoDoBloco(bloco.length);
-        byte[] blocoComPadding = Arrays.copyOf(bloco, bloco.length + padding);
+        int[] blocoComPadding = Arrays.copyOf(bloco, bloco.length + padding);
         for (int i = bloco.length; i < blocoComPadding.length; i++) {
-            blocoComPadding[i] = (byte) padding; // Preenche o novo espaço com bytes que indicam o valor do
-                                                 // preenchimento
+            blocoComPadding[i] = (int) padding; // Preenche o novo espaço com ints que indicam o valor do
+                                                // preenchimento
         }
         return blocoComPadding;
     }
@@ -83,26 +90,61 @@ public class ECBPadding {
             System.out.println();
         }
     }
-    
+
     // Criptografa arquivo
     public String criptografaArquivo(String entrada, String saida, String chave) throws Exception {
-    	String arqCriptografado = encryptFile(entrada, saida, chave);
-        System.out.println("Arquivo criptografado com sucesso.");	
+        String arqCriptografado = encryptFile(entrada, saida, chave);
+        System.out.println("Arquivo criptografado com sucesso.");
         return arqCriptografado;
     }
 
     // Decriptografa o arquivo criptografado
-    public static void decriptografaArquivo(String entrada, String saida, String chave) throws Exception {
-    	decryptFile(saida, "decriptografado.pdf", chave);
+    public void decriptografaArquivo(String entrada, String saida, String chave) throws Exception {
+        decryptFile(saida, "decriptografado.pdf", chave);
         System.out.println("Arquivo decriptografado com sucesso.");
     }
-    
-    public static String encryptFile(String inputFile, String outputFile, String chaveScanner) throws Exception {
-    	byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
-        byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chaveScanner);
+
+    public String encryptFile(String inputFile, String outputFile, List<String[][]> listaDeRoundKey) throws Exception {
+        // byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
+        // Leitura do arquivo, é para ele não jogar exceção, pois já foi verificado se
+        // está certo/existe
+        // byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chaveScanner);
+
+        List<Integer> intList = new ArrayList<>();
+
+        try (BufferedReader leitor = new BufferedReader(new FileReader(inputFile))) {
+            int caractere;
+            StringBuilder texto = new StringBuilder();
+
+            while ((caractere = leitor.read()) != -1) {
+                texto.append(caractere).append(" ");
+            }
+
+            String[] valores = texto.toString().trim().split(" ");
+
+            for (String valor : valores) {
+                intList.add(Integer.parseInt(valor));
+            }
+        }
+
+        // Converter a lista de inteiros para um array de inteiros, se necessário
+        int[] arquivoEmInteiros = new int[intList.size()];
+        for (int i = 0; i < intList.size(); i++) {
+            arquivoEmInteiros[i] = intList.get(i);
+        }
+
+        // byte[] arquivoEmBytes = Files.readAllBytes(Path.of(arquivoDeEntrada));
+
+        int[][] matriz = this.divideEmBlocosDe16Bytes(arquivoEmInteiros);
+        String[][] matrizEmHex = this.converteMatrizParaHex(matriz);
+        List<String[][]> listaDeBlocos = organizarBlocos4x4(matrizEmHex);
+        // c.imprimirMatrizes4x4(matrizes4x4);
+
+        List<String[][]> cifragem = cifragemAES(listaDeRoundKey, listaDeBlocos);
+        
 
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            fos.write(textoCriptografado);
+            fos.write(cifragem);
         }
 
         System.out.println("Tamanho do arquivo criptografado em bytes: " + new File(outputFile).length());
@@ -117,9 +159,9 @@ public class ECBPadding {
             fos.write(textoDecriptografado);
         }
     }
-    
+
     public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
-    	String[] numeros = chave.split(",");
+        String[] numeros = chave.split(",");
         byte[] bytesChave = new byte[numeros.length];
 
         for (int i = 0; i < numeros.length; i++) {
@@ -135,8 +177,8 @@ public class ECBPadding {
 
         return encryptedBytes;
     }
-    
-    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {     
+
+    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
         String[] numeros = chave.split(",");
         byte[] bytesChave = new byte[numeros.length];
 
