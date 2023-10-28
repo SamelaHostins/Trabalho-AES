@@ -1,18 +1,17 @@
 package models.operacaoECB;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import models.algoritmoAES.processoCifragem.Cifragem;
+import models.entradaSaidas.ValidarEntradas;
 
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class ECBPadding extends Cifragem {
@@ -94,17 +93,7 @@ public class ECBPadding extends Cifragem {
         return arqCriptografado;
     }
 
-    // Decriptografa o arquivo criptografado
-    public void decriptografaArquivo(String entrada, String saida, String chave) throws Exception {
-        decryptFile(saida, "decriptografado.pdf", chave);
-        System.out.println("Arquivo decriptografado com sucesso.");
-    }
-
     public String encryptFile(String inputFile, String outputFile, List<String[][]> listaDeRoundKey) throws Exception {
-        // byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
-        // Leitura do arquivo, é para ele não jogar exceção, pois já foi verificado se
-        // está certo/existe
-        // byte[] textoCriptografado = encryptECBInByte(arquivoBytes, chaveScanner);
 
         List<Integer> intList = new ArrayList<>();
 
@@ -122,24 +111,18 @@ public class ECBPadding extends Cifragem {
                 intList.add(Integer.parseInt(valor));
             }
         }
-
-        // Converter a lista de inteiros para um array de inteiros, se necessário
         int[] arquivoEmInteiros = new int[intList.size()];
         for (int i = 0; i < intList.size(); i++) {
             arquivoEmInteiros[i] = intList.get(i);
         }
 
-        // byte[] arquivoEmBytes = Files.readAllBytes(Path.of(arquivoDeEntrada));
-
         int[][] matriz = this.divideEmBlocosDe16Bytes(arquivoEmInteiros);
         String[][] matrizEmHex = this.converteMatrizParaHex(matriz);
         List<String[][]> listaDeBlocos = organizarBlocos4x4(matrizEmHex);
-        // c.imprimirMatrizes4x4(matrizes4x4);
 
         List<String[][]> cifragem = cifragemAES(listaDeRoundKey, listaDeBlocos);
         byte[] bytes;
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            // Converter a lista de matrizes de strings para uma única string
             StringBuilder builder = new StringBuilder();
             for (String[][] matrizToConvert : cifragem) {
                 for (String[] linha : matrizToConvert) {
@@ -149,10 +132,7 @@ public class ECBPadding extends Cifragem {
                 }
             }
             String texto = builder.toString().trim();
-
-            // Codificar a string como bytes usando UTF-8
             bytes = texto.getBytes("UTF-8");
-            // Agora 'bytes' contém a representação em bytes das strings
             fos.write(bytes);
         }
 
@@ -160,48 +140,51 @@ public class ECBPadding extends Cifragem {
         return bytes.toString();
     }
 
-    public static void decryptFile(String inputFile, String outputFile, String chave) throws Exception {
-        byte[] arquivoBytes = Files.readAllBytes(Paths.get(inputFile));
-        byte[] textoDecriptografado = decryptECB(arquivoBytes, chave);
-
-        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            fos.write(textoDecriptografado);
+    public void imprimirListaDeMatrizes(List<String[][]> listaDeMatrizes) {
+        for (String[][] matriz : listaDeMatrizes) {
+            for (String[] linha : matriz) {
+                for (String elemento : linha) {
+                    System.out.print(elemento + " ");
+                }
+                System.out.println(); // Pular para a próxima linha após cada linha da matriz
+            }
+            System.out.println(); // Pular uma linha entre matrizes
         }
     }
 
-    public static byte[] encryptECBInByte(byte[] plaintext, String chave) throws Exception {
-        String[] numeros = chave.split(",");
-        byte[] bytesChave = new byte[numeros.length];
+    public static void main(String[] args) throws IOException {
+        ECBPadding e = new ECBPadding();
+        ValidarEntradas validarEntradas = new ValidarEntradas();
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 0; i < numeros.length; i++) {
-            int numero = Integer.parseInt(numeros[i]);
-            bytesChave[i] = (byte) numero;
+        String arquivoDeEntrada = validarEntradas.obterCaminhoArquivoValido(scanner);
+        System.out.println("");
+
+        List<Integer> intList = new ArrayList<>();
+
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoDeEntrada))) {
+            int caractere;
+            StringBuilder texto = new StringBuilder();
+
+            while ((caractere = leitor.read()) != -1) {
+                texto.append(caractere).append(" ");
+            }
+
+            String[] valores = texto.toString().trim().split(" ");
+
+            for (String valor : valores) {
+                intList.add(Integer.parseInt(valor));
+            }
+        }
+        int[] arquivoEmInteiros = new int[intList.size()];
+        for (int i = 0; i < intList.size(); i++) {
+            arquivoEmInteiros[i] = intList.get(i);
         }
 
-        SecretKey secretKey = new SecretKeySpec(bytesChave, "AES");
+        int[][] matriz = e.divideEmBlocosDe16Bytes(arquivoEmInteiros);
+        String[][] matrizEmHex = e.converteMatrizParaHex(matriz);
+        List<String[][]> listaDeBlocos = e.organizarBlocos4x4(matrizEmHex);
+        e.imprimirListaDeMatrizes(listaDeBlocos);
 
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] encryptedBytes = cipher.doFinal(plaintext);
-
-        return encryptedBytes;
-    }
-
-    public static byte[] decryptECB(byte[] ciphertext, String chave) throws Exception {
-        String[] numeros = chave.split(",");
-        byte[] bytesChave = new byte[numeros.length];
-
-        for (int i = 0; i < numeros.length; i++) {
-            int numero = Integer.parseInt(numeros[i]);
-            bytesChave[i] = (byte) numero;
-        }
-
-        SecretKey secretKey = new SecretKeySpec(bytesChave, "AES");
-
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] encryptedBytes = cipher.doFinal(ciphertext);
-
-        return encryptedBytes;
     }
 }
