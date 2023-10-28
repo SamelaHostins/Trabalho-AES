@@ -25,6 +25,7 @@ public class Main {
     String arquivoDeEntrada = scanner.nextLine();
     System.out.println("");
 
+    // C:/Users/Acer/Downloads/teste.txt
     // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
     String chave = validarEntradas.getChaveValida(scanner);
     // processo da expansão da chave
