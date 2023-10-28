@@ -3,6 +3,8 @@ package models.algoritmoAES.processoCifragem;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.algoritmoAES.expansaoDeChave.ExpansaoDeChave;
+
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
 
@@ -61,7 +63,26 @@ public class Cifragem {
         }
 
         public List<String[][]> cifragemAES(List<String[][]> roundKeys, List<String[][]> blocos) {
-                return null;
+                List<String[][]> blocosCifrados = new ArrayList<>();
+
+                for (String[][] bloco : blocos) {
+                        String[][] matrizResultado = XorComRoundKey(roundKeys.get(0), bloco);
+
+                        for (int roundKey = 1; roundKey <= 9; roundKey++) {
+                                substituirElementos(matrizResultado);
+                                shiftRows(matrizResultado);
+                                int[][] matrizColumn = mixColumns(matrizResultado);
+                                matrizResultado = XorMixColumnComRoundKey(roundKeys.get(roundKey), matrizColumn);
+                        }
+
+                        substituirElementos(matrizResultado);
+                        shiftRows(matrizResultado);
+                        matrizResultado = XorComRoundKey(roundKeys.get(10), matrizResultado);
+
+                        blocosCifrados.add(matrizResultado);
+                }
+
+                return blocosCifrados;
         }
 
         // 1) XOR com a roundKey
@@ -218,30 +239,12 @@ public class Cifragem {
                 }
         }
 
-        /**
-         * precisa criar uma matriz resultante pois nao pode modificar a original até
-         * fazer tudo
-         * pois será uma modificação
-         * Primeiro deve observar:
-         * SE o elemento a ser verificado é 0
-         * ENTAO o resultado da multiplicação será zero
-         * SE o elemento a ser verificado é 1
-         * ENTAO o resultado da multiplicação é igual ao outro termo
-         * Se os termos não forem 0 e nem 1, deve-se recorrer à tabela L e à tabela E
-         */
         // 4) Gerando RoundConstant - MixColumns
         private int[][] mixColumns(String[][] matriz) {
 
                 // precisará transformar a matriz para int para que seja
                 // possível fazer as validações
                 int[][] bloco = converterMatrizHexParaInt(matriz);
-
-                int[][] matrizDeMultiplicacao = {
-                                { 2, 3, 1, 1 },
-                                { 1, 2, 3, 1 },
-                                { 1, 1, 2, 3 },
-                                { 3, 1, 1, 2 }
-                };
 
                 int[][] matrizResultante = new int[4][4];
                 for (int c = 0; c < 4; c++) {
@@ -277,19 +280,17 @@ public class Cifragem {
 
                 for (int i = 0; i < linhas; i++) {
                         for (int j = 0; j < colunas; j++) {
-                                matrizInt[i][j] = Integer.parseInt(matrizString[i][j]);
+                                matrizInt[i][j] = Integer.parseInt(matrizString[i][j], 16);
                         }
                 }
 
                 return matrizInt;
         }
 
-        private int xor(int b1, int b2, int b3, int b4) {
-                int resultado = 0;
-                resultado ^= b1;
-                resultado ^= b2;
-                resultado ^= b3;
-                resultado ^= b4;
+        private int xor(int a, int b, int c, int d) {
+                int resultado = a ^ b;
+                resultado = resultado ^ c;
+                resultado = resultado ^ d;
                 return resultado;
         }
 
@@ -361,6 +362,11 @@ public class Cifragem {
 
                 int linha, coluna;
 
+                if (elemento.length() == 1) {
+                        // Se o elemento tiver apenas 1 caractere, mantenha o valor original
+                        return elemento;
+                }
+
                 char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
                 if (Character.isDigit(primeiroCaractere)) {
                         linha = Integer.parseInt(elemento.substring(0, 1), 16);
@@ -416,6 +422,11 @@ public class Cifragem {
 
                 int linha, coluna;
 
+                if (elemento.length() == 1) {
+                        // Se o elemento tiver apenas 1 caractere, mantenha o valor original
+                        return elemento;
+                }
+
                 char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
                 if (Character.isDigit(primeiroCaractere)) {
                         linha = Integer.parseInt(elemento.substring(0, 1), 16);
@@ -433,39 +444,85 @@ public class Cifragem {
                 return tabelaE[linha][coluna];
         }
 
-        private void printMatrix(String[][] matrix) {
-                for (int i = 0; i < matrix.length; i++) {
-                        for (int j = 0; j < matrix[i].length; j++) {
-                                System.out.print(matrix[i][j] + " ");
+        // etapa 5
+        public String[][] XorMixColumnComRoundKey(String[][] roundKey, int[][] bloco) {
+                String[][] resultado = new String[4][4];
+
+                for (int linha = 0; linha < 4; linha++) {
+                        for (int col = 0; col < 4; col++) {
+                                int valorRoundKey = Integer.parseInt(roundKey[linha][col], 16);
+                                int valorBloco = bloco[linha][col];
+                                int resultadoXOR = valorRoundKey ^ valorBloco;
+
+                                // Converte o resultado para hexadecimal
+                                String resultadoHex = Integer.toHexString(resultadoXOR);
+
+                                // Garante que o resultado tenha dois caracteres (0-padded)
+                                if (resultadoHex.length() == 1) {
+                                        resultadoHex = "0" + resultadoHex;
+                                }
+
+                                resultado[linha][col] = resultadoHex;
+                        }
+                }
+
+                return resultado;
+        }
+
+        public void imprimirMatriz(int[][] matriz) {
+                for (int i = 0; i < matriz.length; i++) {
+                        for (int j = 0; j < matriz[i].length; j++) {
+                                System.out.print(matriz[i][j] + " ");
                         }
                         System.out.println();
                 }
-                System.out.println();
         }
 
         public static void main(String[] args) {
-                Cifragem chave = new Cifragem();
-                int elemento = 107;
-                String valor = "02";
-                // String[][] bloco = {
-                // { "44", "4e", "56", "4e" },
-                // { "45", "56", "49", "54" },
-                // { "53", "4f", "4d", "4f" },
-                // { "45", "4c", "45", "21" }
-                // };
+                Cifragem cifragem = new Cifragem();
+                ExpansaoDeChave chave = new ExpansaoDeChave();
+                int numMatrizes = 11;
+                int numLinhas = 4;
+                int numColunas = 4;
 
-                // String[][] roundKey = {
-                // { "41", "45", "49", "4d" },
-                // { "42", "46", "4a", "4e" },
-                // { "43", "47", "4b", "4f" },
-                // { "44", "48", "4c", "50" }
-                // };
+                // Fornecer a matriz que será adicionada como o primeiro elemento
+                String[][] primeiraMatriz = {
+                                { "41", "45", "49", "4d" },
+                                { "42", "46", "4a", "4e" },
+                                { "43", "47", "4b", "4f" },
+                                { "44", "48", "4c", "50" }
+                };
 
-                // String[][] matrizResultado = chave.XorComRoundKey(roundKey, bloco);
-                // chave.substituirElementos(matrizResultado);
-                // chave.shiftRows(matrizResultado);
-                // chave.printMatrix(matrizResultado);
+                List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes,
+                                numLinhas, numColunas,
+                                primeiraMatriz);
 
-                System.out.println(chave.galoi(elemento, valor));
+                // Criar um bloco com os valores fornecidos
+                String[][] bloco = {
+                                { "44", "4e", "56", "4e" },
+                                { "45", "56", "49", "54" },
+                                { "53", "4f", "4d", "4f" },
+                                { "45", "4c", "45", "21" }
+                };
+
+                List<String[][]> roundKeys = ListaDeMatrizes;
+                List<String[][]> blocos = new ArrayList<>();
+                blocos.add(bloco);
+
+                List<String[][]> blocosCifrados = cifragem.cifragemAES(roundKeys, blocos);
+
+                for (String[][] blocoCifrado : blocosCifrados) {
+                        // Itere pelas linhas e colunas do bloco cifrado
+                        for (int linha = 0; linha < blocoCifrado.length; linha++) {
+                                for (int coluna = 0; coluna < blocoCifrado[0].length; coluna++) {
+                                        System.out.print(blocoCifrado[linha][coluna] + " ");
+                                }
+                                System.out.println();
+                        }
+                        System.out.println();
+                }
+
+                // System.out.println(cifragem.galoi(242, "02"));
+
         }
 }

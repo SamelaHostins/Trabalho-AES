@@ -114,6 +114,10 @@ public class ExpansaoDeChave {
 
         for (int i = 0; i < colunaRotacionada.length; i++) {
             String elemento = colunaRotacionada[i];
+            if (elemento.length() != 2) {
+                // Se o elemento não tiver 2 caracteres, mantenha o valor original
+                continue;
+            }
             int linha = 0;
             int coluna;
 
@@ -182,7 +186,7 @@ public class ExpansaoDeChave {
     }
 
     public static void main(String[] args) {
-        ExpansaoDeChave chave = new ExpansaoDeChave(); 
+        ExpansaoDeChave chave = new ExpansaoDeChave();
         int numMatrizes = 11;
         int numLinhas = 4;
         int numColunas = 4;
@@ -202,7 +206,7 @@ public class ExpansaoDeChave {
         }
     }
 
-    private static void printMatrix(String[][] matriz) {
+    public static void printMatrix(String[][] matriz) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[i].length; j++) {
                 System.out.print(matriz[i][j] + " ");
