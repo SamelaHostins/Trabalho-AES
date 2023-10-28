@@ -1,10 +1,6 @@
 package models.operacaoECB;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -71,7 +67,7 @@ public class ECBPadding extends Cifragem {
         int[] blocoComPadding = Arrays.copyOf(bloco, bloco.length + padding);
         for (int i = bloco.length; i < blocoComPadding.length; i++) {
             blocoComPadding[i] = (int) padding; // Preenche o novo espaço com ints que indicam o valor do
-                                                // preenchimento
+            // preenchimento
         }
         return blocoComPadding;
     }
@@ -92,8 +88,8 @@ public class ECBPadding extends Cifragem {
     }
 
     // Criptografa arquivo
-    public String criptografaArquivo(String entrada, String saida, String chave) throws Exception {
-        String arqCriptografado = encryptFile(entrada, saida, chave);
+    public String criptografaArquivo(String entrada, String saida, List<String[][]> listaDeRoundKey) throws Exception {
+        String arqCriptografado = encryptFile(entrada, saida, listaDeRoundKey);
         System.out.println("Arquivo criptografado com sucesso.");
         return arqCriptografado;
     }
@@ -141,14 +137,27 @@ public class ECBPadding extends Cifragem {
         // c.imprimirMatrizes4x4(matrizes4x4);
 
         List<String[][]> cifragem = cifragemAES(listaDeRoundKey, listaDeBlocos);
-        
-
+        byte[] bytes;
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            fos.write(cifragem);
+            // Converter a lista de matrizes de strings para uma única string
+            StringBuilder builder = new StringBuilder();
+            for (String[][] matrizToConvert : listaDeBlocos) {
+                for (String[] linha : matrizToConvert) {
+                    for (String elemento : linha) {
+                        builder.append(elemento).append(" ");
+                    }
+                }
+            }
+            String texto = builder.toString().trim();
+
+            // Codificar a string como bytes usando UTF-8
+            bytes = texto.getBytes("UTF-8");
+            // Agora 'bytes' contém a representação em bytes das strings
+            fos.write(bytes);
         }
 
         System.out.println("Tamanho do arquivo criptografado em bytes: " + new File(outputFile).length());
-        return textoCriptografado.toString();
+        return bytes.toString();
     }
 
     public static void decryptFile(String inputFile, String outputFile, String chave) throws Exception {

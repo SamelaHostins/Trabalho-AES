@@ -49,6 +49,16 @@ public class Main {
         } else {
             fileManager.leArq(arquivoDeSaida, chave);
         }
+        //20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
+        //C:/Users/Elvis/Documents/Trabalho-AES
+        // fileManager.criaArq(arquivoDeSaida);
+        try {
+            e.criptografaArquivo(arquivoDeEntrada, arquivoDeSaida, listaDeRoundKey);
+            //e.decriptografaArquivo(arquivoDeEntrada, arquivoDeSaida, chave);
+        } catch (Exception e1) {
+            // Lide com a exceção aqui
+            e1.printStackTrace(); // ou qualquer tratamento de erro específico que você desejar
+        }
 
     }
 }
