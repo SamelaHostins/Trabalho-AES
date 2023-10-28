@@ -273,7 +273,7 @@ public class Cifragem {
 
         }
 
-        private int[][] converterMatrizHexParaInt(String[][] matrizString) {
+        public int[][] converterMatrizHexParaInt(String[][] matrizString) {
                 int linhas = matrizString.length;
                 int colunas = matrizString[0].length;
                 int[][] matrizInt = new int[linhas][colunas];
@@ -295,14 +295,19 @@ public class Cifragem {
         }
 
         private int verificaSeEhZero(int elemento) {
-                return elemento == 0 ? 0 : elemento;
+                if (elemento == 0) {
+                        return 0;
+                } else {
+                        return elemento;
+                }
+
         }
 
         private int verificacao(int elemento, String valorMultiplicacao) {
                 if (elemento == 0) {
                         return 0;
                 } else if (elemento == 1) {
-                        return elemento;
+                        return Integer.parseInt(valorMultiplicacao);
                 } else {
                         return this.galoi(elemento, valorMultiplicacao);
                 }
@@ -478,51 +483,69 @@ public class Cifragem {
                 }
         }
 
-        public static void main(String[] args) {
-                Cifragem cifragem = new Cifragem();
-                ExpansaoDeChave chave = new ExpansaoDeChave();
-                int numMatrizes = 11;
-                int numLinhas = 4;
-                int numColunas = 4;
+        // public static void main(String[] args) {
+        // Cifragem cifragem = new Cifragem();
+        // ExpansaoDeChave chave = new ExpansaoDeChave();
+        // int numMatrizes = 11;
+        // int numLinhas = 4;
+        // int numColunas = 4;
 
-                // Fornecer a matriz que será adicionada como o primeiro elemento
-                String[][] primeiraMatriz = {
-                                { "41", "45", "49", "4d" },
-                                { "42", "46", "4a", "4e" },
-                                { "43", "47", "4b", "4f" },
-                                { "44", "48", "4c", "50" }
-                };
+        // // // Fornecer a matriz que será adicionada como o primeiro elemento
+        // String[][] primeiraMatriz = {
+        // { "41", "45", "49", "4d" },
+        // { "42", "46", "4a", "4e" },
+        // { "43", "47", "4b", "4f" },
+        // { "44", "48", "4c", "50" }
+        // };
 
-                List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes,
-                                numLinhas, numColunas,
-                                primeiraMatriz);
+        // List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes,
+        // numLinhas, numColunas,
+        // primeiraMatriz);
 
-                // Criar um bloco com os valores fornecidos
-                String[][] bloco = {
-                                { "44", "4e", "56", "4e" },
-                                { "45", "56", "49", "54" },
-                                { "53", "4f", "4d", "4f" },
-                                { "45", "4c", "45", "21" }
-                };
+        // // Criar um bloco com os valores fornecidos
+        // String[][] bloco = {
+        // { "44", "4e", "56", "4e" },
+        // { "45", "56", "49", "54" },
+        // { "53", "4f", "4d", "4f" },
+        // { "45", "4c", "45", "21" }
+        // };
 
-                List<String[][]> roundKeys = ListaDeMatrizes;
-                List<String[][]> blocos = new ArrayList<>();
-                blocos.add(bloco);
+        // List<String[][]> roundKeys = ListaDeMatrizes;
+        // List<String[][]> blocos = new ArrayList<>();
+        // blocos.add(bloco);
 
-                List<String[][]> blocosCifrados = cifragem.cifragemAES(roundKeys, blocos);
+        // List<String[][]> blocosCifrados = cifragem.cifragemAES(roundKeys, blocos);
 
-                for (String[][] blocoCifrado : blocosCifrados) {
-                        // Itere pelas linhas e colunas do bloco cifrado
-                        for (int linha = 0; linha < blocoCifrado.length; linha++) {
-                                for (int coluna = 0; coluna < blocoCifrado[0].length; coluna++) {
-                                        System.out.print(blocoCifrado[linha][coluna] + " ");
-                                }
-                                System.out.println();
-                        }
-                        System.out.println();
-                }
+        // for (String[][] blocoCifrado : blocosCifrados) {
+        // // Itere pelas linhas e colunas do bloco cifrado
+        // for (int linha = 0; linha < blocoCifrado.length; linha++) {
+        // for (int coluna = 0; coluna < blocoCifrado[0].length; coluna++) {
+        // System.out.print(blocoCifrado[linha][coluna] + " ");
+        // }
+        // System.out.println();
+        // }
+        // System.out.println();
+        // }
 
-                // System.out.println(cifragem.galoi(242, "02"));
+        // String[][] bloco = {
+        // { "6B", "2B", "C0", "7B" },
+        // { "CA", "7B", "A2", "C5" },
+        // { "6F", "63", "CA", "30" },
+        // { "A3", "7C", "F2", "01" },
+        // };
 
-        }
+        // int[][] matrizInt = cifragem.converterMatrizHexParaInt(bloco);
+        // cifragem.imprimirMatriz(matrizInt);
+        // System.out.println("");
+
+        // int[][] matriz = cifragem.mixColumns(bloco);
+        // String[][] matrizHex = cifragem.ChaveMatrixParaHex(matriz);
+        // chave.printMatrix(matrizHex);
+
+        // System.out.println(cifragem.galoi(43, "03"));
+        // System.out.println(cifragem.verificaSeEhZero(123));
+        // System.out.println(cifragem.verificaSeEhZero(99));
+        // System.out.println(cifragem.galoi(124, "02"));
+
+        // }
 }

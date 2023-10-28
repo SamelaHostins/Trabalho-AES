@@ -202,11 +202,11 @@ public class ExpansaoDeChave {
         List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes, numLinhas, numColunas, primeiraMatriz);
 
         for (String[][] matriz : ListaDeMatrizes) {
-            printMatrix(matriz);
+            chave.printMatrix(matriz);
         }
     }
 
-    public static void printMatrix(String[][] matriz) {
+    public void printMatrix(String[][] matriz) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[i].length; j++) {
                 System.out.print(matriz[i][j] + " ");
