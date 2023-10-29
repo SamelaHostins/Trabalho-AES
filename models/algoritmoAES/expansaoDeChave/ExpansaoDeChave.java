@@ -22,7 +22,7 @@ public class ExpansaoDeChave {
     }
 
     private String[][] gerarMatriz(int numLinhas, int numColunas, String[][] matrizAnterior, int contadorMatrizes) {
-        String[][] matrix = new String[numLinhas][numColunas];
+        String[][] matriz = new String[numLinhas][numColunas];
 
         for (int i = 0; i < numLinhas; i++) {
             for (int j = 0; j < numColunas; j++) {
@@ -33,19 +33,19 @@ public class ExpansaoDeChave {
                     substituirElementos(ultimaColunaMatrizAnterior);
                     fazerXORComRoundConstant(ultimaColunaMatrizAnterior, contadorMatrizes);
                     fazerXORPrimeiraColunaComPasso5(matrizAnterior, ultimaColunaMatrizAnterior);
-                    matrix[i][j] = ultimaColunaMatrizAnterior[i];
+                    matriz[i][j] = ultimaColunaMatrizAnterior[i];
 
                 } else {
                     // XOR da coluna anterior e a coluna equivalente da matriz anterior
-                    int valorColunaAnterior = Integer.parseInt(matrizAnterior[i][j - 1], 16);
-                    int valorColunaMatrizAnterior = Integer.parseInt(matrix[i][j - 1], 16);
+                    int valorColunaAnterior = Integer.parseInt(matriz[i][j - 1], 16);
+                    int valorColunaMatrizAnterior = Integer.parseInt(matrizAnterior[i][j], 16);
                     int valorXOR = valorColunaAnterior ^ valorColunaMatrizAnterior;
-                    matrix[i][j] = String.format("%02X", valorXOR);
+                    matriz[i][j] = String.format("%02X", valorXOR);
                 }
 
             }
         }
-        return matrix;
+        return matriz;
     }
 
     public int getQuantidadeDeMatrizes() {
@@ -114,6 +114,10 @@ public class ExpansaoDeChave {
 
         for (int i = 0; i < colunaRotacionada.length; i++) {
             String elemento = colunaRotacionada[i];
+            if (elemento.length() != 2) {
+                // Se o elemento não tiver 2 caracteres, mantenha o valor original
+                continue;
+            }
             int linha = 0;
             int coluna;
 
@@ -182,7 +186,7 @@ public class ExpansaoDeChave {
     }
 
     public static void main(String[] args) {
-        ExpansaoDeChave chave = new ExpansaoDeChave(); // Crie uma instância da classe Chave
+        ExpansaoDeChave chave = new ExpansaoDeChave();
         int numMatrizes = 11;
         int numLinhas = 4;
         int numColunas = 4;
@@ -197,15 +201,15 @@ public class ExpansaoDeChave {
 
         List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes, numLinhas, numColunas, primeiraMatriz);
 
-        for (String[][] matrix : ListaDeMatrizes) {
-            printMatrix(matrix);
+        for (String[][] matriz : ListaDeMatrizes) {
+            chave.printMatrix(matriz);
         }
     }
 
-    private static void printMatrix(String[][] matrix) {
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + " ");
+    public void printMatrix(String[][] matriz) {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                System.out.print(matriz[i][j] + " ");
             }
             System.out.println();
         }
