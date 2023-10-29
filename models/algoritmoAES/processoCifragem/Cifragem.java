@@ -20,14 +20,6 @@ public class Cifragem {
                 return hexMatrix;
         }
 
-        public String IntParaHex(int[] elementosChave) {
-                StringBuilder result = new StringBuilder();
-                for (int c : elementosChave) {
-                        result.append(String.format("%02X", c));
-                }
-                return result.toString();
-        }
-
         // Isso porque o AES pede que os blocos sejam organizados em matrizes 4x4
         public List<String[][]> organizarBlocos4x4(String[][] blocos) {
                 List<String[][]> ListaBlocos = new ArrayList<>();
@@ -148,27 +140,30 @@ public class Cifragem {
                 for (int i = 0; i < 4; i++) {
                         for (int j = 0; j < 4; j++) {
                                 String elemento = matriz[i][j];
-                                int linha = 0;
-                                int coluna;
 
-                                char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
+                                if (elemento.length() == 2) {
+                                        int linha = 0;
+                                        int coluna;
 
-                                if (Character.isDigit(primeiroCaractere)) {
-                                        linha = Integer.parseInt(elemento.substring(0, 1));
-                                } else {
-                                        if (primeiroCaractere >= 'a' && primeiroCaractere <= 'z') {
-                                                linha = primeiroCaractere - 'a' + 10;
+                                        char primeiroCaractere = Character.toLowerCase(elemento.charAt(0));
+
+                                        if (Character.isDigit(primeiroCaractere)) {
+                                                linha = Integer.parseInt(elemento.substring(0, 1));
+                                        } else {
+                                                if (primeiroCaractere >= 'a' && primeiroCaractere <= 'z') {
+                                                        linha = primeiroCaractere - 'a' + 10;
+                                                }
                                         }
-                                }
 
-                                char segundoCaractere = Character.toLowerCase(elemento.charAt(1));
-                                if (Character.isDigit(segundoCaractere)) {
-                                        coluna = Integer.parseInt(elemento.substring(1, 2));
-                                } else {
-                                        coluna = segundoCaractere - 'a' + 10;
-                                }
+                                        char segundoCaractere = Character.toLowerCase(elemento.charAt(1));
+                                        if (Character.isDigit(segundoCaractere)) {
+                                                coluna = Integer.parseInt(elemento.substring(1, 2));
+                                        } else {
+                                                coluna = segundoCaractere - 'a' + 10;
+                                        }
 
-                                matriz[i][j] = sBox[linha][coluna];
+                                        matriz[i][j] = sBox[linha][coluna];
+                                }
                         }
                 }
         }
@@ -243,8 +238,8 @@ public class Cifragem {
                 // precisará transformar a matriz para int para que seja
                 // possível fazer as validações
                 int[][] bloco = converterMatrizHexParaInt(matriz);
-
                 int[][] matrizResultante = new int[4][4];
+                
                 for (int c = 0; c < 4; c++) {
                         // primeira linha da matriz de multiplicação
                         // 2,3,1,1
