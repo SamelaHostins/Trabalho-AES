@@ -6,14 +6,14 @@ import java.util.List;
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
 
-        public String[][] converteMatrizParaHex(int[][] matriz) {
+        public String[][] converteMatrizParaHex(byte[][] matriz) {
                 int numRows = matriz.length;
                 int numCols = matriz[0].length;
                 String[][] hexMatrix = new String[numRows][numCols];
 
                 for (int i = 0; i < numRows; i++) {
                         for (int j = 0; j < numCols; j++) {
-                                hexMatrix[i][j] = IntParaHex(new int[] { matriz[i][j] });
+                                hexMatrix[i][j] = String.format("%02X", matriz[i][j] & 0xFF);
                         }
                 }
 
