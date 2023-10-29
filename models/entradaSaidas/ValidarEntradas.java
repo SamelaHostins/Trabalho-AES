@@ -50,13 +50,13 @@ public class ValidarEntradas {
         return null; // A chave é válida
     }
 
-    // getChaveValida valida a chave a partir do método validarChave
+    // pede a chave pro usuário e chama o método de validar
     public String getChaveValida(Scanner scanner) {
         String chave = "";
         boolean chaveValida = false;
 
         while (!chaveValida) {
-            System.out.println("Informe a chave de criptografia (16 bytes separados por vírgula):");
+            System.out.println("Informe a chave de criptografia:");
             chave = scanner.nextLine();
 
             String erro = validarChave(chave);
