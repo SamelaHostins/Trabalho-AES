@@ -3,6 +3,8 @@ package models.algoritmoAES.processoCifragem;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.algoritmoAES.expansaoDeChave.ExpansaoDeChave;
+
 // Autoras: Karoline, Maria Eduarda e Sâmela
 public class Cifragem {
 
@@ -239,7 +241,7 @@ public class Cifragem {
                 // possível fazer as validações
                 int[][] bloco = converterMatrizHexParaInt(matriz);
                 int[][] matrizResultante = new int[4][4];
-                
+
                 for (int c = 0; c < 4; c++) {
                         // primeira linha da matriz de multiplicação
                         // 2,3,1,1
@@ -476,50 +478,50 @@ public class Cifragem {
                 }
         }
 
-        // public static void main(String[] args) {
-        // Cifragem cifragem = new Cifragem();
-        // ExpansaoDeChave chave = new ExpansaoDeChave();
-        // int numMatrizes = 11;
-        // int numLinhas = 4;
-        // int numColunas = 4;
+        public static void main(String[] args) {
+                Cifragem cifragem = new Cifragem();
+                ExpansaoDeChave expansao = new ExpansaoDeChave();
+                int numMatrizes = 11;
+                int numLinhas = 4;
+                int numColunas = 4;
 
-        // // // Fornecer a matriz que será adicionada como o primeiro elemento
-        // String[][] primeiraMatriz = {
-        // { "41", "45", "49", "4d" },
-        // { "42", "46", "4a", "4e" },
-        // { "43", "47", "4b", "4f" },
-        // { "44", "48", "4c", "50" }
-        // };
+                // // Fornecer a matriz que será adicionada como o primeiro elemento
+                String[][] primeiraMatriz = {
+                                { "41", "45", "49", "4d" },
+                                { "42", "46", "4a", "4e" },
+                                { "43", "47", "4b", "4f" },
+                                { "44", "48", "4c", "50" }
+                };
 
-        // List<String[][]> ListaDeMatrizes = chave.gerarMatrizes(numMatrizes,
-        // numLinhas, numColunas,
-        // primeiraMatriz);
+                List<String[][]> ListaDeMatrizes = expansao.gerarMatrizes(numMatrizes,
+                                numLinhas, numColunas,
+                                primeiraMatriz);
 
-        // // Criar um bloco com os valores fornecidos
-        // String[][] bloco = {
-        // { "44", "4e", "56", "4e" },
-        // { "45", "56", "49", "54" },
-        // { "53", "4f", "4d", "4f" },
-        // { "45", "4c", "45", "21" }
-        // };
+                // Criar um bloco com os valores fornecidos
+                String[][] bloco = {
+                                { "44", "4e", "56", "4e" },
+                                { "45", "56", "49", "54" },
+                                { "53", "4f", "4d", "4f" },
+                                { "45", "4c", "45", "21" }
+                };
 
-        // List<String[][]> roundKeys = ListaDeMatrizes;
-        // List<String[][]> blocos = new ArrayList<>();
-        // blocos.add(bloco);
+                List<String[][]> roundKeys = ListaDeMatrizes;
+                List<String[][]> blocos = new ArrayList<>();
+                blocos.add(bloco);
 
-        // List<String[][]> blocosCifrados = cifragem.cifragemAES(roundKeys, blocos);
+                List<String[][]> blocosCifrados = cifragem.cifragemAES(roundKeys, blocos);
 
-        // for (String[][] blocoCifrado : blocosCifrados) {
-        // // Itere pelas linhas e colunas do bloco cifrado
-        // for (int linha = 0; linha < blocoCifrado.length; linha++) {
-        // for (int coluna = 0; coluna < blocoCifrado[0].length; coluna++) {
-        // System.out.print(blocoCifrado[linha][coluna] + " ");
-        // }
-        // System.out.println();
-        // }
-        // System.out.println();
-        // }
-
+                for (String[][] blocoCifrado : blocosCifrados) {
+                        // Itere pelas linhas e colunas do bloco cifrado
+                        for (int linha = 0; linha < blocoCifrado.length; linha++) {
+                                for (int coluna = 0; coluna < blocoCifrado[0].length; coluna++) {
+                                        System.out.print(blocoCifrado[linha][coluna] + " ");
+                                }
+                                System.out.println();
+                        }
+                        System.out.println();
+                }
+        }
         // String[][] bloco = {
         // { "6B", "2B", "C0", "7B" },
         // { "CA", "7B", "A2", "C5" },

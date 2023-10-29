@@ -93,7 +93,7 @@ public class ECBPadding extends Cifragem {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ECBPadding e = new ECBPadding();
         ValidarEntradas validarEntradas = new ValidarEntradas();
         CriptografarArquivo criptografarArquivo = new CriptografarArquivo();
