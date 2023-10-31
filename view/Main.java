@@ -18,10 +18,8 @@ public class Main {
         Chave chaveExpansao = new Chave();
         Scanner scanner = new Scanner(System.in);
 
-        // 20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248
+        // 65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80
         String chave = validarEntradas.getChaveValida(scanner);
-        // processo da expansão da chave
-        // System.out.println("Chave: " + chave);
         System.out.println("");
         String chaveHexadecimal = chaveExpansao.transformarChaveParaHexadecimal(chave);
         String[][] matrizDaChave = chaveExpansao.organizarChaveEmMatriz4x4(chaveHexadecimal);
